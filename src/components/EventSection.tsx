@@ -47,12 +47,16 @@ const EventSection = () => {
                 Sapno Ki Udaan
               </h3>
 
+              <p className="mt-2 text-sm font-semibold text-gold tracking-wide font-sans">
+                21st March 2026
+              </p>
+
               <p className="mt-4 text-muted-foreground font-sans leading-relaxed max-w-md mx-auto">
                 Sapno Ki Udaan is an initiative dedicated to empowering young minds, encouraging dreams, and creating opportunities for growth.
               </p>
 
               <a
-                href="https://forms.google.com"
+                href="https://docs.google.com/forms/d/e/1FAIpQLScKl0q8pHRpoar3xCaarcJIDaD_S5mizVlv_18jQXdoEpA2IQ/viewform"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 inline-flex items-center justify-center px-10 py-3.5 rounded bg-gold text-primary font-semibold text-sm tracking-wide hover:bg-gold-dark transition-colors shadow-lg shadow-gold/20"
