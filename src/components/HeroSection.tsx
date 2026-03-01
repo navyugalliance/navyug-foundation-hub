@@ -19,55 +19,49 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-6 lg:px-16 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground leading-tight">
-              NAVYUG<br />ALLIANCE
-            </h1>
-            <p className="mt-3 text-lg font-serif italic text-gold tracking-widest">
-              Together We Rise
-            </p>
-            <p className="mt-6 text-primary-foreground/80 text-lg max-w-lg leading-relaxed font-sans">
-              NavYug Alliance is a youth-driven movement formed by seven united minds committed to leadership, creativity, and social impact.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#about"
-                className="inline-flex items-center justify-center px-8 py-3 rounded bg-gold text-primary font-semibold text-sm tracking-wide hover:bg-gold-dark transition-colors"
-              >
-                Explore Our Vision
-              </a>
-              <a
-                href="#event"
-                className="inline-flex items-center justify-center px-8 py-3 rounded border border-primary-foreground/40 text-primary-foreground font-semibold text-sm tracking-wide hover:bg-primary-foreground/10 transition-colors"
-              >
-                Upcoming Event
-              </a>
+        <motion.div
+          className="flex flex-col items-center text-center"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          {/* Logo + Name row */}
+          <div className="flex items-center gap-5 md:gap-8">
+            <img
+              src={logo}
+              alt="NavYug Alliance Logo"
+              className="w-20 h-20 md:w-28 md:h-28 object-contain drop-shadow-lg"
+            />
+            <div>
+              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground leading-tight">
+                NAVYUG<br className="hidden md:block" /> ALLIANCE
+              </h1>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right - Logo */}
-          <motion.div
-            className="flex justify-center lg:justify-end"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          >
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-gold/10 blur-3xl scale-125" />
-              <img
-                src={logo}
-                alt="NavYug Alliance Logo"
-                className="relative w-80 md:w-[420px] object-contain drop-shadow-2xl"
-              />
-            </div>
-          </motion.div>
-        </div>
+          <p className="mt-4 text-lg font-serif italic text-gold tracking-widest">
+            Together We Rise
+          </p>
+
+          <p className="mt-6 text-primary-foreground/80 text-lg max-w-xl leading-relaxed font-sans">
+            NavYug Alliance is a youth-driven movement formed by seven united minds committed to leadership, creativity, and social impact.
+          </p>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <a
+              href="#about"
+              className="inline-flex items-center justify-center px-8 py-3 rounded bg-gold text-primary font-semibold text-sm tracking-wide hover:bg-gold-dark transition-colors"
+            >
+              Explore Our Vision
+            </a>
+            <a
+              href="#event"
+              className="inline-flex items-center justify-center px-8 py-3 rounded border border-primary-foreground/40 text-primary-foreground font-semibold text-sm tracking-wide hover:bg-primary-foreground/10 transition-colors"
+            >
+              Upcoming Event
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
