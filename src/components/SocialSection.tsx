@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { Instagram, Linkedin, Youtube } from "lucide-react";
+import { Instagram, Mail, Phone } from "lucide-react";
 
 const socials = [
-  { icon: Instagram, label: "Instagram", href: "#" },
-  { icon: Linkedin, label: "LinkedIn", href: "#" },
-  { icon: Youtube, label: "YouTube", href: "#" },
+  { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/navyug.alliance" },
+  { icon: Mail, label: "Email", href: "mailto:navyugalliance@gmail.com" },
+  { icon: Phone, label: "Phone", href: "tel:+917414984390" },
 ];
 
 const SocialSection = () => {
@@ -32,14 +32,25 @@ const SocialSection = () => {
             <a
               key={s.label}
               href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={s.href.startsWith("http") ? "_blank" : undefined}
+              rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
               aria-label={s.label}
               className="w-12 h-12 rounded-full border border-primary/30 flex items-center justify-center text-primary hover:border-gold hover:text-gold hover:bg-gold/10 transition-all"
             >
               <s.icon className="w-5 h-5" strokeWidth={1.5} />
             </a>
           ))}
+        </motion.div>
+
+        <motion.div
+          className="mt-6 flex flex-col items-center gap-1 text-sm text-muted-foreground font-sans"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <p>navyugalliance@gmail.com</p>
+          <p>+91 7414 984 390</p>
         </motion.div>
       </div>
     </section>
