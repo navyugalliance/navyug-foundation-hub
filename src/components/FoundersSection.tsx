@@ -3,10 +3,10 @@ import { User } from "lucide-react";
 
 const founders = [
   "Chirag Nawgaje",
+  "Vansh Maheshwari",
   "Harsh Baraliya",
   "Vidhan Zambad",
   "Krishna Rathi",
-  "Vansh Maheshwari",
   "Soham Ujjainkar",
   "Sarth Takalkar",
 ];
