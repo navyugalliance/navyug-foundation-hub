@@ -51,6 +51,7 @@ const SocialSection = () => {
         >
           <p>navyugalliance@gmail.com</p>
           <p>+91 7414 984 390</p>
+          <p>+91 866 896 1817</p>
         </motion.div>
       </div>
     </section>
