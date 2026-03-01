@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import logo from "@/assets/logo.png";
 
 const HeroSection = () => {
   return (
@@ -25,19 +24,9 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          {/* Logo + Name row */}
-          <div className="flex items-center gap-5 md:gap-8">
-            <img
-              src={logo}
-              alt="NavYug Alliance Logo"
-              className="w-20 h-20 md:w-28 md:h-28 object-contain drop-shadow-lg"
-            />
-            <div>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground leading-tight">
-                NAVYUG<br className="hidden md:block" /> ALLIANCE
-              </h1>
-            </div>
-          </div>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground leading-tight">
+            NAVYUG ALLIANCE
+          </h1>
 
           <p className="mt-4 text-lg font-serif italic text-gold tracking-widest">
             Together We Rise
