@@ -67,26 +67,21 @@ const FoundersSection = () => {
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-gold/30 group-hover:border-gold/70 transition-all duration-300 shadow-md group-hover:shadow-gold/20">
-                {founder.image ? (
-                  <img
-                    src={founder.image}
-                    alt={founder.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                      e.currentTarget.nextElementSibling?.removeAttribute("hidden");
-                    }}
-                  />
-                ) : null}
-
-                {/* Fallback icon when image fails to load or not set */}
-                <div
-                  className="absolute inset-0 flex items-center justify-center bg-primary/5"
-                  hidden={!!founder.image}
-                >
-                  <User className="w-12 h-12 sm:w-14 sm:h-14 text-gold/60" strokeWidth={1.5} />
-                </div>
-              </div>
+  {founder.image ? (
+    <img
+      src={founder.image}
+      alt={founder.name}
+      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      // Optional: improve UX on slow connections
+      loading="lazy"
+      // You can keep onError if you want, but it's usually not needed anymore
+    />
+  ) : (
+    <div className="absolute inset-0 flex items-center justify-center bg-primary/5">
+      <User className="w-12 h-12 sm:w-14 sm:h-14 text-gold/60" strokeWidth={1.5} />
+    </div>
+  )}
+</div>
 
               <h3 className="mt-5 text-base sm:text-lg font-semibold text-primary tracking-wide">
                 {founder.name}
