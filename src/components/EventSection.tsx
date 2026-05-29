@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import EventCard from "./EventCard";
+import { getRecentEvents } from "@/lib/events";
 
 const EventSection = () => {
+  const events = getRecentEvents(3);
+
   return (
     <section id="event" className="py-24 bg-background">
       <div className="container mx-auto px-6 lg:px-16">
@@ -12,59 +17,40 @@ const EventSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary">Upcoming Event</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary">Our Events</h2>
           <div className="w-16 h-0.5 bg-gold mx-auto mt-4" />
+          <p className="mt-6 text-muted-foreground font-sans max-w-xl mx-auto">
+            Initiatives that bring our vision to life — past milestones and what's next.
+          </p>
         </motion.div>
 
-        <motion.div
-          className="mt-12 max-w-2xl mx-auto relative"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <div
+          className={`mt-12 grid gap-8 ${
+            events.length === 1
+              ? "max-w-2xl mx-auto"
+              : events.length === 2
+                ? "md:grid-cols-2 max-w-4xl mx-auto"
+                : "md:grid-cols-2 lg:grid-cols-3"
+          }`}
         >
-          {/* Card */}
-          <div className="relative rounded-lg border-2 border-primary overflow-hidden shadow-xl">
-            {/* Gold top strip */}
-            <div className="h-1.5 bg-gold" />
+          {events.map((e, i) => (
+            <EventCard key={e.id} event={e} index={i} compact />
+          ))}
+        </div>
 
-            {/* Subtle background pattern */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-              <svg className="w-full h-full" viewBox="0 0 600 400" fill="none">
-                <path d="M300 400 Q350 200 300 0" stroke="hsl(var(--navy))" strokeWidth="40" />
-                <path d="M250 400 Q300 250 250 50" stroke="hsl(var(--navy))" strokeWidth="30" />
-              </svg>
-            </div>
-
-            <div className="relative p-10 md:p-14 text-center">
-              <div className="flex items-center justify-center gap-2 text-gold">
-                <Sparkles className="w-5 h-5" />
-                <span className="text-sm font-semibold tracking-widest uppercase font-sans">Featured Initiative</span>
-                <Sparkles className="w-5 h-5" />
-              </div>
-
-              <h3 className="mt-4 text-3xl md:text-4xl font-bold text-primary">
-                Sapno Ki Udaan
-              </h3>
-
-              <p className="mt-2 text-sm font-semibold text-gold tracking-wide font-sans">
-                21st March 2026
-              </p>
-
-              <p className="mt-4 text-muted-foreground font-sans leading-relaxed max-w-md mx-auto">
-                Sapno Ki Udaan is an initiative dedicated to empowering young minds, encouraging dreams, and creating opportunities for growth.
-              </p>
-
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLScKl0q8pHRpoar3xCaarcJIDaD_S5mizVlv_18jQXdoEpA2IQ/viewform"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center justify-center px-10 py-3.5 rounded bg-gold text-primary font-semibold text-sm tracking-wide hover:bg-gold-dark transition-colors shadow-lg shadow-gold/20"
-              >
-                Register Now
-              </a>
-            </div>
-          </div>
+        <motion.div
+          className="mt-12 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <Link
+            to="/events"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded border-2 border-primary text-primary font-semibold text-sm tracking-wide hover:bg-primary hover:text-primary-foreground transition-colors"
+          >
+            View All Events <ArrowRight className="w-4 h-4" />
+          </Link>
         </motion.div>
       </div>
     </section>
