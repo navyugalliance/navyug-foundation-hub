@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Calendar, Check, X, ArrowRight } from "lucide-react";
 import { EventItem, isCompleted, formatEventDate } from "@/lib/events";
@@ -172,191 +173,194 @@ const EventCard = ({ event, index = 0 }: Props) => {
       </div>
 
       {/* PREMIUM FULL-SCREEN DETAILS DIARY MODAL */}
-      <AnimatePresence>
-        {detailOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 md:p-6 z-50 overflow-y-auto"
-            onClick={() => setDetailOpen(false)}
-          >
+      {typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {detailOpen && (
             <motion.div
-              initial={{ scale: 0.93, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.93, y: 15 }}
-              transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="relative bg-[#F8F5EE] paper-texture max-w-4xl w-full border border-primary/20 rounded-md shadow-2xl p-6 md:p-10 text-left overflow-hidden my-8"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 md:p-6 z-[9999] overflow-y-auto"
+              onClick={() => setDetailOpen(false)}
             >
-              {/* Notebook binding styling inside modal */}
-              <div className="absolute inset-0 lined-paper opacity-25 pointer-events-none" />
-              <div className="absolute left-6 top-0 bottom-0 w-[1.5px] bg-red-400/20 pointer-events-none" />
-
-              {/* Close button */}
-              <button
-                onClick={() => setDetailOpen(false)}
-                className="absolute top-5 right-5 w-11 h-11 flex items-center justify-center rounded-full border border-primary/10 hover:border-gold hover:text-gold transition-all z-20 bg-background/80"
-                aria-label="Close modal"
+              <motion.div
+                initial={{ scale: 0.93, y: 15 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.93, y: 15 }}
+                transition={{ type: "spring", damping: 25, stiffness: 220 }}
+                className="relative bg-[#F8F5EE] paper-texture max-w-4xl w-full border border-primary/20 rounded-md shadow-2xl p-6 md:p-10 text-left overflow-hidden my-8"
+                onClick={(e) => e.stopPropagation()}
               >
-                <X className="w-5 h-5" />
-              </button>
+                {/* Notebook binding styling inside modal */}
+                <div className="absolute inset-0 lined-paper opacity-25 pointer-events-none" />
+                <div className="absolute left-6 top-0 bottom-0 w-[1.5px] bg-red-400/20 pointer-events-none" />
 
-              {/* Detailed Content Collage Grid */}
-              <div className="grid lg:grid-cols-12 gap-8 items-start pt-6 relative z-10 max-h-[80vh] overflow-y-auto pr-2">
-                
-                {/* Collage Left: Mounted Poster & Dates */}
-                <div className="lg:col-span-5 space-y-6">
-                  {/* Polaroid styled mounted frame with tape pin */}
-                  <div className="bg-white p-3 pb-5 shadow-lg border border-neutral-200/40 rotate-[-1.5deg] relative max-w-sm mx-auto">
-                    {/* Centered top masking tape on modal poster */}
-                    <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 w-20 h-6 bg-[#D4A64A]/30 backdrop-blur-[0.5px] border-l border-r border-dashed border-[#D4A64A]/40 rotate-[2deg] z-20" />
-                    
-                    <div className="w-full bg-[#F3ECE0]/30 overflow-hidden border border-neutral-300/10 flex items-center justify-center rounded-sm">
-                      {posterSrc ? (
-                        <img 
-                          src={posterSrc} 
-                          alt={event.title} 
-                          className="w-full h-auto object-contain block" 
-                          style={{ imageRendering: "auto" }}
-                        />
-                      ) : (
-                        <div className="w-full aspect-[3/4] p-4 flex items-center justify-center">
-                          <EventIllustration id={event.id} />
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-4 text-center">
-                      <h4 className="font-handwriting text-2xl font-bold text-primary">
-                        {event.title}
-                      </h4>
-                      <p className="text-[10px] text-gold uppercase tracking-widest font-sans font-bold mt-1">
-                        {completed ? "Archive Milestone" : "Live Campaign"}
-                      </p>
-                    </div>
-                  </div>
+                {/* Close button */}
+                <button
+                  onClick={() => setDetailOpen(false)}
+                  className="absolute top-5 right-5 w-11 h-11 flex items-center justify-center rounded-full border border-primary/10 hover:border-gold hover:text-gold transition-all z-20 bg-background/80"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
 
-                  <div className="bg-[#FFFEEB] border border-neutral-300/40 p-4 shadow-sm rotate-[1deg] space-y-1.5 pl-6">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600 font-sans">
-                      <Calendar className="w-4 h-4 text-gold" />
-                      {formatEventDate(event.date)}
-                    </div>
-                    {event.location && (
-                      <div className="flex items-center gap-2 text-xs text-neutral-500 font-sans">
-                        <MapPin className="w-4 h-4 text-gold" />
-                        {event.location}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Collage Right: Narrative Storyboard */}
-                <div className="lg:col-span-7 space-y-6">
+                {/* Detailed Content Collage Grid */}
+                <div className="grid lg:grid-cols-12 gap-8 items-start pt-6 relative z-10 max-h-[80vh] overflow-y-auto pr-2">
                   
-                  {/* Title banner */}
-                  <div>
-                    <h3 className="text-3xl font-bold text-primary font-serif leading-none">
-                      {event.title}
-                    </h3>
-                    {event.tagline && (
-                      <span className="font-handwriting text-2xl text-gold mt-2 block">
-                        "{event.tagline}"
-                      </span>
-                    )}
+                  {/* Collage Left: Mounted Poster & Dates */}
+                  <div className="lg:col-span-5 space-y-6">
+                    {/* Polaroid styled mounted frame with tape pin */}
+                    <div className="bg-white p-3 pb-5 shadow-lg border border-neutral-200/40 rotate-[-1.5deg] relative max-w-sm mx-auto">
+                      {/* Centered top masking tape on modal poster */}
+                      <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 w-20 h-6 bg-[#D4A64A]/30 backdrop-blur-[0.5px] border-l border-r border-dashed border-[#D4A64A]/40 rotate-[2deg] z-20" />
+                      
+                      <div className="w-full bg-[#F3ECE0]/30 overflow-hidden border border-neutral-300/10 flex items-center justify-center rounded-sm">
+                        {posterSrc ? (
+                          <img 
+                            src={posterSrc} 
+                            alt={event.title} 
+                            className="w-full h-auto object-contain block" 
+                            style={{ imageRendering: "auto" }}
+                          />
+                        ) : (
+                          <div className="w-full aspect-[3/4] p-4 flex items-center justify-center">
+                            <EventIllustration id={event.id} />
+                          </div>
+                        )}
+                      </div>
+                      <div className="mt-4 text-center">
+                        <h4 className="font-handwriting text-2xl font-bold text-primary">
+                          {event.title}
+                        </h4>
+                        <p className="text-[10px] text-gold uppercase tracking-widest font-sans font-bold mt-1">
+                          {completed ? "Archive Milestone" : "Live Campaign"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#FFFEEB] border border-neutral-300/40 p-4 shadow-sm rotate-[1deg] space-y-1.5 pl-6">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-neutral-600 font-sans">
+                        <Calendar className="w-4 h-4 text-gold" />
+                        {formatEventDate(event.date)}
+                      </div>
+                      {event.location && (
+                        <div className="flex items-center gap-2 text-xs text-neutral-500 font-sans">
+                          <MapPin className="w-4 h-4 text-gold" />
+                          {event.location}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Split horizontal line */}
-                  <svg className="w-full h-2 text-gold opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M1,5 Q50,8 99,3" strokeLinecap="round" />
-                  </svg>
+                  {/* Collage Right: Narrative Storyboard */}
+                  <div className="lg:col-span-7 space-y-6">
+                    
+                    {/* Title banner */}
+                    <div>
+                      <h3 className="text-3xl font-bold text-primary font-serif leading-none">
+                        {event.title}
+                      </h3>
+                      {event.tagline && (
+                        <span className="font-handwriting text-2xl text-gold mt-2 block">
+                          "{event.tagline}"
+                        </span>
+                      )}
+                    </div>
 
-                  {/* Detailed descriptions */}
-                  <div className="space-y-2">
-                    <span className="font-handwriting text-2xl text-gold block">The Narrative</span>
-                    <p className="text-neutral-700 text-sm leading-relaxed font-sans">
-                      {event.description}
-                    </p>
-                  </div>
+                    {/* Split horizontal line */}
+                    <svg className="w-full h-2 text-gold opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M1,5 Q50,8 99,3" strokeLinecap="round" />
+                    </svg>
 
-                  {/* Core objectives */}
-                  {event.objective && (
-                    <div className="bg-[#FFFDEB] border border-neutral-300/40 p-5 rounded-sm shadow-sm relative">
-                      <h4 className="font-handwriting text-xl font-bold text-primary mb-1">Our Core Objective</h4>
-                      <p className="text-neutral-600 text-xs leading-relaxed font-sans">
-                        {event.objective}
+                    {/* Detailed descriptions */}
+                    <div className="space-y-2">
+                      <span className="font-handwriting text-2xl text-gold block">The Narrative</span>
+                      <p className="text-neutral-700 text-sm leading-relaxed font-sans">
+                        {event.description}
                       </p>
                     </div>
-                  )}
 
-                  {/* Focus & Recipients */}
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {event.theme && (
-                      <div className="bg-white border border-neutral-200 p-4 rounded-sm">
-                        <span className="font-handwriting text-xl text-gold mb-1.5 block">Campaign Focus</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {event.theme.split("•").map((tag) => (
-                            <span key={tag.trim()} className="text-[10px] px-2 py-0.5 bg-[#F4ECE1]/40 text-[#173E70] font-sans font-bold rounded-full">
-                              {tag.trim()}
-                            </span>
-                          ))}
-                        </div>
+                    {/* Core objectives */}
+                    {event.objective && (
+                      <div className="bg-[#FFFDEB] border border-neutral-300/40 p-5 rounded-sm shadow-sm relative">
+                        <h4 className="font-handwriting text-xl font-bold text-primary mb-1">Our Core Objective</h4>
+                        <p className="text-neutral-600 text-xs leading-relaxed font-sans">
+                          {event.objective}
+                        </p>
                       </div>
                     )}
 
-                    {event.targetAudience && (
-                      <div className="bg-white border border-neutral-200 p-4 rounded-sm">
-                        <span className="font-handwriting text-xl text-gold mb-1.5 block">Recipient Circle</span>
-                        <ul className="space-y-1 text-[11px] text-neutral-600 font-sans">
-                          {event.targetAudience.split(",").slice(0, 3).map((aud) => (
-                            <li key={aud.trim()} className="flex items-center gap-1.5">
-                              <Check className="w-3.5 h-3.5 text-gold" />
-                              <span className="truncate">{aud.trim()}</span>
-                            </li>
-                          ))}
-                        </ul>
+                    {/* Focus & Recipients */}
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {event.theme && (
+                        <div className="bg-white border border-neutral-200 p-4 rounded-sm">
+                          <span className="font-handwriting text-xl text-gold mb-1.5 block">Campaign Focus</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {event.theme.split("•").map((tag) => (
+                              <span key={tag.trim()} className="text-[10px] px-2 py-0.5 bg-[#F4ECE1]/40 text-[#173E70] font-sans font-bold rounded-full">
+                                {tag.trim()}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {event.targetAudience && (
+                        <div className="bg-white border border-neutral-200 p-4 rounded-sm">
+                          <span className="font-handwriting text-xl text-gold mb-1.5 block">Recipient Circle</span>
+                          <ul className="space-y-1 text-[11px] text-neutral-600 font-sans">
+                            {event.targetAudience.split(",").slice(0, 3).map((aud) => (
+                              <li key={aud.trim()} className="flex items-center gap-1.5">
+                                <Check className="w-3.5 h-3.5 text-gold" />
+                                <span className="truncate">{aud.trim()}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Partner Stamps & CTAs */}
+                    <div className="pt-4 border-t border-dashed border-primary/10 flex flex-wrap justify-between items-center gap-4">
+                      <div className="text-[11px] text-neutral-500 font-sans space-y-0.5">
+                        {event.helpOf && <p><span className="font-semibold text-neutral-600">Supported By: </span>{event.helpOf}</p>}
+                        {event.socialMediaPartner && <p><span className="font-semibold text-neutral-600">Media Partner: </span>{event.socialMediaPartner}</p>}
                       </div>
-                    )}
-                  </div>
 
-                  {/* Partner Stamps & CTAs */}
-                  <div className="pt-4 border-t border-dashed border-primary/10 flex flex-wrap justify-between items-center gap-4">
-                    <div className="text-[11px] text-neutral-500 font-sans space-y-0.5">
-                      {event.helpOf && <p><span className="font-semibold text-neutral-600">Supported By: </span>{event.helpOf}</p>}
-                      {event.socialMediaPartner && <p><span className="font-semibold text-neutral-600">Media Partner: </span>{event.socialMediaPartner}</p>}
+                      <div className="flex items-center gap-3">
+                        {!completed && event.buttons && event.buttons.length > 0 && (
+                          <div className="flex gap-2">
+                            {event.buttons.map((btn) => (
+                              <a
+                                key={btn.url}
+                                href={btn.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-6 py-2.5 bg-primary text-background border border-primary text-xs font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm"
+                              >
+                                {btn.label}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {event.currentStatus && (
+                          <div className="px-3 py-1 bg-gold/15 border border-dashed border-gold text-[10px] font-bold text-primary uppercase">
+                            {event.currentStatus}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      {!completed && event.buttons && event.buttons.length > 0 && (
-                        <div className="flex gap-2">
-                          {event.buttons.map((btn) => (
-                            <a
-                              key={btn.url}
-                              href={btn.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-6 py-2.5 bg-primary text-background border border-primary text-xs font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm"
-                            >
-                              {btn.label}
-                            </a>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {event.currentStatus && (
-                        <div className="px-3 py-1 bg-gold/15 border border-dashed border-gold text-[10px] font-bold text-primary uppercase">
-                          {event.currentStatus}
-                        </div>
-                      )}
-                    </div>
                   </div>
 
                 </div>
-
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </motion.div>
   );
 };
