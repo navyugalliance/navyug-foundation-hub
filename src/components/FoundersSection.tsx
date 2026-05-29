@@ -36,6 +36,10 @@ const founders = [
     name: "Sarth Takalkar",
     image: "/sarth.png",
   },
+  {
+    name: "Jayesh Laddha",
+    image: "/jayesh.png",
+  },
 ];
 
 const FoundersSection = () => {
@@ -52,7 +56,7 @@ const FoundersSection = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-primary">Founding Members</h2>
           <div className="w-16 h-0.5 bg-gold mx-auto mt-4" />
           <p className="mt-4 text-muted-foreground text-lg font-sans max-w-xl mx-auto">
-            Seven visionaries united by purpose, passion, and brotherhood.
+            Eight visionaries united by purpose, passion, and brotherhood.
           </p>
         </motion.div>
 

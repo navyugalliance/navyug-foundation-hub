@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import logo from "@/assets/logo.png";
 
 const HeroSection = () => {
   return (
@@ -24,6 +25,14 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
+          <div className="mb-8 p-5 rounded-2xl bg-primary-foreground/95 shadow-2xl shadow-gold/10 ring-1 ring-gold/20">
+            <img
+              src={logo}
+              alt="NavYug Alliance logo"
+              className="w-32 h-32 md:w-40 md:h-40 object-contain"
+            />
+          </div>
+
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-primary-foreground leading-tight">
             NAVYUG ALLIANCE
           </h1>
@@ -33,7 +42,7 @@ const HeroSection = () => {
           </p>
 
           <p className="mt-6 text-primary-foreground/80 text-lg max-w-xl leading-relaxed font-sans">
-            NavYug Alliance is a youth-driven movement formed by seven united minds committed to leadership, creativity, and social impact.
+            NavYug Alliance is a youth-driven movement formed by eight united minds committed to leadership, creativity, and social impact.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
