@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Sparkles, CheckCircle2 } from "lucide-react";
-import { EventItem, isCompleted, formatEventDate } from "@/lib/events";
+import { Sparkles, CheckCircle2, MapPin } from "lucide-react";
+import { EventItem, isCompleted, formatEventDate, aspectToClass } from "@/lib/events";
 
 interface Props {
   event: EventItem;
@@ -10,19 +10,31 @@ interface Props {
 
 const EventCard = ({ event, index = 0, compact = false }: Props) => {
   const completed = isCompleted(event);
+  const primaryImage = event.images && event.images.length > 0 ? event.images[0] : null;
 
   return (
     <motion.div
-      className="relative"
+      className="relative h-full"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
     >
-      <div className="relative rounded-lg border-2 border-primary overflow-hidden shadow-xl h-full bg-background">
+      <div className="relative rounded-lg border-2 border-primary overflow-hidden shadow-xl h-full bg-background flex flex-col">
         <div className="h-1.5 bg-gold" />
 
-        <div className={`relative ${compact ? "p-8" : "p-10 md:p-14"} text-center flex flex-col h-full`}>
+        {primaryImage && (
+          <div className={`w-full overflow-hidden bg-muted ${aspectToClass(primaryImage.aspect)}`}>
+            <img
+              src={primaryImage.src}
+              alt={primaryImage.alt || event.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        )}
+
+        <div className={`relative ${compact ? "p-8" : "p-10 md:p-12"} text-center flex flex-col flex-1`}>
           <div className="flex items-center justify-center gap-2 text-gold">
             {completed ? (
               <>
@@ -50,6 +62,12 @@ const EventCard = ({ event, index = 0, compact = false }: Props) => {
           <p className="mt-2 text-sm font-semibold text-gold tracking-wide font-sans">
             {formatEventDate(event.date)}
           </p>
+
+          {event.location && (
+            <p className="mt-1 inline-flex items-center justify-center gap-1 text-xs text-muted-foreground font-sans">
+              <MapPin className="w-3 h-3" /> {event.location}
+            </p>
+          )}
 
           <p className="mt-4 text-muted-foreground font-sans leading-relaxed max-w-md mx-auto flex-1">
             {event.description}
