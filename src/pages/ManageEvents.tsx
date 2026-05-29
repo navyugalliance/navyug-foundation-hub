@@ -1,23 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   EventItem,
   EventImage,
-  EventImageAspect,
   EventButton,
   getAllEvents,
   saveAllEvents,
   resetToSeed,
   isCompleted,
-  aspectToClass,
 } from "@/lib/events";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Trash2, Plus, Download, RotateCcw, Save, ImagePlus, X } from "lucide-react";
-
-const ASPECTS: EventImageAspect[] = ["16:9", "4:3", "1:1", "3:4", "21:9"];
+import { ArrowLeft, Trash2, Plus, Download, RotateCcw, Save, ImagePlus, X } from "lucide-react";
+import EventCard from "@/components/EventCard";
 
 const emptyEvent = (): EventItem => ({
   id: `event-${Date.now()}`,
@@ -74,6 +72,7 @@ const ManageEvents = () => {
   const addEvent = () => {
     setEvents((prev) => [emptyEvent(), ...prev]);
     setDirty(true);
+    toast({ title: "New event created", description: "Edit the fields below to customize." });
   };
 
   const deleteEvent = (idx: number) => {
@@ -85,7 +84,7 @@ const ManageEvents = () => {
   const saveAll = () => {
     saveAllEvents(events);
     setDirty(false);
-    toast({ title: "Saved", description: "Events updated." });
+    toast({ title: "Changes Saved", description: "Scrapbook initiatives updated in storage." });
   };
 
   const handleReset = () => {
@@ -93,7 +92,7 @@ const ManageEvents = () => {
     resetToSeed();
     setEvents(getAllEvents());
     setDirty(false);
-    toast({ title: "Reset", description: "Restored seed events." });
+    toast({ title: "Database Reset", description: "Restored default events." });
   };
 
   const exportJson = () => {
@@ -107,47 +106,74 @@ const ManageEvents = () => {
   };
 
   return (
-    <main className="min-h-screen bg-muted/20 py-10">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-primary">Manage Events</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Add, edit, delete events and images. Changes are stored in your browser.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button onClick={addEvent} variant="outline" size="sm">
-              <Plus className="w-4 h-4 mr-1" /> New Event
-            </Button>
-            <Button onClick={exportJson} variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-1" /> Export JSON
-            </Button>
-            <Button onClick={handleReset} variant="outline" size="sm">
-              <RotateCcw className="w-4 h-4 mr-1" /> Reset to Seed
-            </Button>
-            <Button onClick={saveAll} size="sm" disabled={!dirty}>
-              <Save className="w-4 h-4 mr-1" /> {dirty ? "Save Changes" : "Saved"}
-            </Button>
-          </div>
-        </div>
+    <main className="min-h-screen bg-[#F8F5EE] paper-texture flex flex-col justify-between select-none relative">
+      
+      {/* Left red margin line */}
+      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[2px] bg-red-400/10 pointer-events-none z-10" />
 
-        <div className="space-y-6">
-          {events.map((event, idx) => (
-            <EventEditor
-              key={event.id + idx}
-              event={event}
-              onChange={(patch) => updateEvent(idx, patch)}
-              onDelete={() => deleteEvent(idx)}
-            />
-          ))}
-          {events.length === 0 && (
-            <div className="text-center py-20 text-muted-foreground">
-              No events. Click <span className="font-semibold">New Event</span> to add one.
+      <div>
+        {/* Header Sheet (Navy paper sheet with torn bottom edge) */}
+        <section className="relative bg-primary text-primary-foreground py-16 pb-24 overflow-hidden torn-edge-bottom z-10">
+          <div className="absolute inset-0 grid-paper pointer-events-none opacity-5" />
+          
+          <div className="container mx-auto px-6 lg:px-16 relative z-10">
+            <Link
+              to="/"
+              className="group inline-flex items-center gap-2 text-primary-foreground/80 hover:text-gold transition-colors text-sm font-sans font-semibold mb-6"
+            >
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Back to Home
+            </Link>
+            
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground tracking-tight">
+                  Initiatives Journal Editor
+                </h1>
+                <p className="mt-3 text-primary-foreground/85 font-handwriting text-2xl rotate-[-1deg] inline-block">
+                  Review, write, and layout campaigns in the scrapbook database.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2.5 z-20">
+                <Button onClick={addEvent} variant="outline" className="border-primary-foreground/20 text-primary-foreground bg-primary/20 hover:bg-primary-foreground hover:text-primary transition-all">
+                  <Plus className="w-4 h-4 mr-1.5" /> New Event
+                </Button>
+                <Button onClick={exportJson} variant="outline" className="border-primary-foreground/20 text-primary-foreground bg-primary/20 hover:bg-primary-foreground hover:text-primary transition-all">
+                  <Download className="w-4 h-4 mr-1.5" /> Export JSON
+                </Button>
+                <Button onClick={handleReset} variant="outline" className="border-primary-foreground/20 text-primary-foreground bg-primary/20 hover:bg-primary-foreground hover:text-primary transition-all">
+                  <RotateCcw className="w-4 h-4 mr-1.5" /> Reset to Seed
+                </Button>
+                <Button onClick={saveAll} className="bg-gold text-primary hover:bg-gold-light transition-all" disabled={!dirty}>
+                  <Save className="w-4 h-4 mr-1.5" /> {dirty ? "Save Changes" : "Saved"}
+                </Button>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        </section>
+
+        {/* Editors List */}
+        <section className="py-16 relative z-20">
+          <div className="container mx-auto px-6 lg:px-16">
+            <div className="space-y-16">
+              {events.map((event, idx) => (
+                <EventEditor
+                  key={event.id + idx}
+                  event={event}
+                  onChange={(patch) => updateEvent(idx, patch)}
+                  onDelete={() => deleteEvent(idx)}
+                />
+              ))}
+              {events.length === 0 && (
+                <div className="text-center py-32 bg-white/40 border border-dashed border-primary/20 rounded-sm">
+                  <p className="font-handwriting text-3xl text-neutral-500 italic">No events. Click "New Event" above to write a page.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
       </div>
+
     </main>
   );
 };
@@ -167,7 +193,7 @@ const EventEditor = ({ event, onChange, onDelete }: EditorProps) => {
     for (const file of Array.from(files)) {
       try {
         const src = await fileToCompressedDataUrl(file);
-        newImages.push({ src, aspect: "16:9", alt: event.title });
+        newImages.push({ src, aspect: "1:1", alt: event.title });
       } catch {
         toast({ title: "Image error", description: file.name, variant: "destructive" });
       }
@@ -197,188 +223,201 @@ const EventEditor = ({ event, onChange, onDelete }: EditorProps) => {
     onChange({ buttons: (event.buttons || []).filter((_, idx) => idx !== i) });
 
   return (
-    <div className="bg-background border rounded-lg p-6 shadow-sm">
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div>
-          <h2 className="text-xl font-bold text-primary">{event.title || "Untitled event"}</h2>
-          <span
-            className={`inline-block mt-1 text-xs px-2 py-0.5 rounded ${
-              completed ? "bg-muted text-muted-foreground" : "bg-gold/20 text-primary"
-            }`}
-          >
-            {completed ? "Completed" : "Upcoming"}
-          </span>
+    <div className="grid lg:grid-cols-12 gap-8 items-start border-b border-primary/10 pb-16">
+      
+      {/* LEFT COLUMN: Editing Form (Notebook Page) */}
+      <div className="lg:col-span-7 xl:col-span-8 bg-white border border-neutral-300/40 p-6 md:p-8 rounded-sm shadow-sm relative">
+        <div className="absolute top-[-10px] left-10 w-24 h-5 bg-[#D4A64A]/10 border-l border-r border-dashed border-[#D4A64A]/25 rotate-[-2deg] pointer-events-none" />
+        
+        <div className="flex items-start justify-between gap-3 mb-6 pb-4 border-b border-neutral-100">
+          <div>
+            <h2 className="text-2xl font-serif font-bold text-primary">{event.title || "Untitled Campaign"}</h2>
+            <span
+              className={`inline-block mt-1 text-xs px-2.5 py-0.5 rounded font-sans font-bold uppercase tracking-wider ${
+                completed ? "bg-neutral-100 text-neutral-500 border border-neutral-200" : "bg-amber-50 text-amber-800 border border-amber-200"
+              }`}
+            >
+              {completed ? "Completed" : "Upcoming"}
+            </span>
+          </div>
+          <Button onClick={onDelete} variant="ghost" size="sm" className="text-destructive hover:bg-destructive/5 hover:text-destructive">
+            <Trash2 className="w-4 h-4 mr-1" /> Delete
+          </Button>
         </div>
-        <Button onClick={onDelete} variant="ghost" size="sm" className="text-destructive">
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <Field label="ID (unique)">
-          <Input value={event.id} onChange={(e) => onChange({ id: e.target.value })} />
-        </Field>
-        <Field label="Title">
-          <Input value={event.title} onChange={(e) => onChange({ title: e.target.value })} />
-        </Field>
-        <Field label="Date">
-          <Input
-            type="date"
-            value={event.date}
-            onChange={(e) => onChange({ date: e.target.value })}
-          />
-        </Field>
-        <Field label="Status override">
-          <select
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            value={event.completed === true ? "completed" : event.completed === false ? "upcoming" : "auto"}
-            onChange={(e) => {
-              const v = e.target.value;
-              onChange({
-                completed: v === "completed" ? true : v === "upcoming" ? false : undefined,
-              });
-            }}
-          >
-            <option value="auto">Auto (by date)</option>
-            <option value="upcoming">Force Upcoming</option>
-            <option value="completed">Force Completed</option>
-          </select>
-        </Field>
-        <Field label="Tagline" className="md:col-span-2">
-          <Input value={event.tagline || ""} onChange={(e) => onChange({ tagline: e.target.value })} />
-        </Field>
-        <Field label="Description" className="md:col-span-2">
-          <Textarea
-            rows={3}
-            value={event.description}
-            onChange={(e) => onChange({ description: e.target.value })}
-          />
-        </Field>
-        <Field label="Organizer">
-          <Input value={event.organizer || ""} onChange={(e) => onChange({ organizer: e.target.value })} />
-        </Field>
-        <Field label="Presented By">
-          <Input value={event.presentedBy || ""} onChange={(e) => onChange({ presentedBy: e.target.value })} />
-        </Field>
-        <Field label="Location">
-          <Input value={event.location || ""} onChange={(e) => onChange({ location: e.target.value })} />
-        </Field>
-        <Field label="Theme">
-          <Input value={event.theme || ""} onChange={(e) => onChange({ theme: e.target.value })} />
-        </Field>
-        <Field label="Objective" className="md:col-span-2">
-          <Textarea rows={2} value={event.objective || ""} onChange={(e) => onChange({ objective: e.target.value })} />
-        </Field>
-        <Field label="Featured Attraction">
-          <Input value={event.featuredAttraction || ""} onChange={(e) => onChange({ featuredAttraction: e.target.value })} />
-        </Field>
-        <Field label="Target Audience">
-          <Input value={event.targetAudience || ""} onChange={(e) => onChange({ targetAudience: e.target.value })} />
-        </Field>
-        <Field label="Instagram">
-          <Input value={event.instagram || ""} onChange={(e) => onChange({ instagram: e.target.value })} />
-        </Field>
-        <Field label="With the help of">
-          <Input value={event.helpOf || ""} onChange={(e) => onChange({ helpOf: e.target.value })} />
-        </Field>
-        <Field label="Social Media Partner">
-          <Input value={event.socialMediaPartner || ""} onChange={(e) => onChange({ socialMediaPartner: e.target.value })} />
-        </Field>
-        <Field label="Current Status">
-          <Input value={event.currentStatus || ""} onChange={(e) => onChange({ currentStatus: e.target.value })} />
-        </Field>
-      </div>
-
-      {/* Images */}
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-2">
-          <Label className="text-sm font-semibold">Images</Label>
-          <label className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded border cursor-pointer hover:bg-muted">
-            <ImagePlus className="w-3 h-3" /> Add images
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              className="hidden"
-              onChange={(e) => {
-                handleImageUpload(e.target.files);
-                e.target.value = "";
-              }}
+        <div className="grid md:grid-cols-2 gap-4">
+          <Field label="ID (unique lowercase string)">
+            <Input value={event.id} onChange={(e) => onChange({ id: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Campaign Name">
+            <Input value={event.title} onChange={(e) => onChange({ title: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Launch Date">
+            <Input
+              type="date"
+              value={event.date}
+              onChange={(e) => onChange({ date: e.target.value })}
+              className="font-sans border-neutral-300"
             />
-          </label>
+          </Field>
+          <Field label="Status Override">
+            <select
+              className="flex h-10 w-full rounded-sm border border-neutral-300 bg-background px-3 py-2 text-sm font-sans focus:outline-none focus:ring-1 focus:ring-primary"
+              value={event.completed === true ? "completed" : event.completed === false ? "upcoming" : "auto"}
+              onChange={(e) => {
+                const v = e.target.value;
+                onChange({
+                  completed: v === "completed" ? true : v === "upcoming" ? false : undefined,
+                });
+              }}
+            >
+              <option value="auto">Auto (by date)</option>
+              <option value="upcoming">Force Upcoming</option>
+              <option value="completed">Force Completed</option>
+            </select>
+          </Field>
+          <Field label="Slogan / Tagline (Optional)" className="md:col-span-2">
+            <Input value={event.tagline || ""} onChange={(e) => onChange({ tagline: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Teaser Narrative (Full Description)" className="md:col-span-2">
+            <Textarea
+              rows={4}
+              value={event.description}
+              onChange={(e) => onChange({ description: e.target.value })}
+              className="font-sans border-neutral-300 leading-relaxed"
+            />
+          </Field>
+          <Field label="Organizer">
+            <Input value={event.organizer || ""} onChange={(e) => onChange({ organizer: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Presented By">
+            <Input value={event.presentedBy || ""} onChange={(e) => onChange({ presentedBy: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Location">
+            <Input value={event.location || ""} onChange={(e) => onChange({ location: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Campaign Focus (Bullet tags separated by •)">
+            <Input value={event.theme || ""} onChange={(e) => onChange({ theme: e.target.value })} className="font-sans border-neutral-300" placeholder="Focus 1 • Focus 2" />
+          </Field>
+          <Field label="Core Objective" className="md:col-span-2">
+            <Textarea rows={2} value={event.objective || ""} onChange={(e) => onChange({ objective: e.target.value })} className="font-sans border-neutral-300 leading-relaxed" />
+          </Field>
+          <Field label="Featured Highlight">
+            <Input value={event.featuredAttraction || ""} onChange={(e) => onChange({ featuredAttraction: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Recipient Circle (Comma separated list)">
+            <Input value={event.targetAudience || ""} onChange={(e) => onChange({ targetAudience: e.target.value })} className="font-sans border-neutral-300" placeholder="Daily passengers, Travelers" />
+          </Field>
+          <Field label="Instagram handle">
+            <Input value={event.instagram || ""} onChange={(e) => onChange({ instagram: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Supported By / With the Help of">
+            <Input value={event.helpOf || ""} onChange={(e) => onChange({ helpOf: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Media Partner">
+            <Input value={event.socialMediaPartner || ""} onChange={(e) => onChange({ socialMediaPartner: e.target.value })} className="font-sans border-neutral-300" />
+          </Field>
+          <Field label="Current Status Info text">
+            <Input value={event.currentStatus || ""} onChange={(e) => onChange({ currentStatus: e.target.value })} className="font-sans border-neutral-300" placeholder="Preparations Underway 💧" />
+          </Field>
         </div>
-        {(event.images || []).length === 0 && (
-          <p className="text-xs text-muted-foreground">No images yet.</p>
-        )}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {(event.images || []).map((img, i) => (
-            <div key={i} className="border rounded overflow-hidden bg-muted/30">
-              <div className={`w-full overflow-hidden bg-muted ${aspectToClass(img.aspect)}`}>
-                <img src={img.src} alt={img.alt || ""} className="w-full h-full object-cover" />
+
+        {/* Images Upload */}
+        <div className="mt-6 border-t border-dashed border-neutral-200 pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <Label className="text-sm font-bold text-primary">Cover & Campaign Images</Label>
+            <label className="inline-flex items-center gap-1.5 text-xs px-3.5 py-1.5 rounded-sm border border-neutral-300 bg-background cursor-pointer hover:bg-neutral-100 transition-all font-semibold font-sans">
+              <ImagePlus className="w-3.5 h-3.5" /> Upload Image
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  handleImageUpload(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          </div>
+          {(event.images || []).length === 0 && (
+            <p className="text-xs text-neutral-400 font-sans">No custom images uploaded. Will fall back to seeded assets or default sketches.</p>
+          )}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {(event.images || []).map((img, i) => (
+              <div key={i} className="border border-neutral-200 rounded-sm overflow-hidden bg-neutral-50/50 p-2 space-y-2 relative shadow-sm">
+                <div className="w-full aspect-[4/3] bg-[#F3ECE0]/30 rounded-sm overflow-hidden flex items-center justify-center border border-neutral-200/20">
+                  <img src={img.src} alt={img.alt || ""} className="w-full h-full object-contain p-1" />
+                </div>
+                <div className="space-y-1.5">
+                  <Input
+                    placeholder="Image Alt text"
+                    className="h-8 text-xs font-sans"
+                    value={img.alt || ""}
+                    onChange={(e) => updateImage(i, { alt: e.target.value })}
+                  />
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/5 h-8 text-xs font-sans"
+                    onClick={() => removeImage(i)}
+                  >
+                    <X className="w-3 h-3 mr-1" /> Remove
+                  </Button>
+                </div>
               </div>
-              <div className="p-2 space-y-2">
-                <select
-                  className="w-full text-xs h-8 rounded border border-input bg-background px-2"
-                  value={img.aspect || "16:9"}
-                  onChange={(e) => updateImage(i, { aspect: e.target.value as EventImageAspect })}
-                >
-                  {ASPECTS.map((a) => (
-                    <option key={a} value={a}>
-                      {a}
-                    </option>
-                  ))}
-                </select>
+            ))}
+          </div>
+          <p className="text-[10px] text-neutral-400 mt-2 font-sans">
+            Note: The first uploaded image is set as the cover poster in the scrapbook teaser.
+          </p>
+        </div>
+
+        {/* Buttons */}
+        <div className="mt-6 border-t border-dashed border-neutral-200 pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <Label className="text-sm font-bold text-primary">CTA Action Buttons (Forms / Registration)</Label>
+            <Button onClick={addButton} variant="outline" size="sm" className="h-7 text-xs border-neutral-300 font-sans">
+              <Plus className="w-3 h-3 mr-1" /> Add Action Link
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {(event.buttons || []).map((btn, i) => (
+              <div key={i} className="flex gap-2 items-center">
                 <Input
-                  placeholder="Alt text"
-                  className="h-8 text-xs"
-                  value={img.alt || ""}
-                  onChange={(e) => updateImage(i, { alt: e.target.value })}
+                  placeholder="Button Label (e.g. Register Now)"
+                  value={btn.label}
+                  onChange={(e) => updateButton(i, { label: e.target.value })}
+                  className="font-sans border-neutral-300"
                 />
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="w-full text-destructive h-7 text-xs"
-                  onClick={() => removeImage(i)}
-                >
-                  <X className="w-3 h-3 mr-1" /> Remove
+                <Input
+                  placeholder="Button URL (e.g. https://forms.gle/...)"
+                  value={btn.url}
+                  onChange={(e) => updateButton(i, { url: e.target.value })}
+                  className="font-sans border-neutral-300"
+                />
+                <Button onClick={() => removeButton(i)} variant="ghost" size="sm" className="text-destructive hover:bg-destructive/5 hover:text-destructive">
+                  <X className="w-4 h-4" />
                 </Button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <p className="text-[10px] text-muted-foreground mt-2">
-          First image is shown as the card cover. Images are resized to 1600px max and stored in your browser.
+      </div>
+
+      {/* RIGHT COLUMN: Live Interactive Preview */}
+      <div className="lg:col-span-5 xl:col-span-4 sticky top-6 z-10 space-y-4">
+        <span className="font-handwriting text-xl text-gold block text-center rotate-[-1deg]">
+          Live Scrapbook Preview
+        </span>
+        <div className="max-w-sm mx-auto shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <EventCard event={event} compact={true} />
+        </div>
+        <p className="text-[10.5px] text-neutral-500 font-sans text-center max-w-[280px] mx-auto leading-relaxed">
+          Click the <span className="font-bold text-primary">"View Story"</span> button in the preview to open and inspect the detailed campaign modal storyboard.
         </p>
       </div>
 
-      {/* Buttons */}
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-2">
-          <Label className="text-sm font-semibold">CTA Buttons</Label>
-          <Button onClick={addButton} variant="outline" size="sm" className="h-7 text-xs">
-            <Plus className="w-3 h-3 mr-1" /> Add button
-          </Button>
-        </div>
-        <div className="space-y-2">
-          {(event.buttons || []).map((btn, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <Input
-                placeholder="Label"
-                value={btn.label}
-                onChange={(e) => updateButton(i, { label: e.target.value })}
-              />
-              <Input
-                placeholder="https://..."
-                value={btn.url}
-                onChange={(e) => updateButton(i, { url: e.target.value })}
-              />
-              <Button onClick={() => removeButton(i)} variant="ghost" size="sm" className="text-destructive">
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
@@ -393,7 +432,7 @@ const Field = ({
   className?: string;
 }) => (
   <div className={className}>
-    <Label className="text-xs text-muted-foreground mb-1 block">{label}</Label>
+    <Label className="text-xs text-neutral-500 mb-1.5 block font-sans font-bold uppercase tracking-wider">{label}</Label>
     {children}
   </div>
 );
