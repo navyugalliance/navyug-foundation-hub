@@ -6,11 +6,48 @@
     "description": "Sapno Ki Udaan is an initiative dedicated to empowering young minds, encouraging dreams, and creating opportunities for growth.",
     "tagline": "Featured Initiative",
     "completed": true,
+    "organizer": "NavYug Alliance",
+    "presentedBy": "NavYug Alliance",
+    "instagram": "@navyugalliance",
     "buttons": [
       {
         "label": "Register Now",
         "url": "https://docs.google.com/forms/d/e/1FAIpQLScKl0q8pHRpoar3xCaarcJIDaD_S5mizVlv_18jQXdoEpA2IQ/viewform"
       }
     ]
+  },
+  {
+    "id": "jal-dhara",
+    "title": "जल धारा",
+    "date": "2026-05-31",
+    "description": "जल धारा is a community service initiative dedicated to providing free chilled drinking water to travelers, commuters, passengers, and the general public during the intense summer season. The initiative aims to offer relief from extreme heat, promote hydration, and encourage the spirit of social responsibility and community service.",
+    "tagline": "धूप सबके लिए है, राहत भी होनी चाहिए।",
+    "organizer": "NavYug Alliance",
+    "presentedBy": "NavYug Alliance",
+    "location": "Nandura, Maharashtra",
+    "theme": "Service • Relief • Humanity • Hydration • Community",
+    "objective": "To provide free cold drinking water to travelers and citizens during peak summer conditions, ensuring comfort, hydration, and well-being while promoting a culture of service and compassion within the community.",
+    "featuredAttraction": "निःशुल्क शीतल जल सेवा",
+    "targetAudience": "Travelers, daily commuters, bus passengers, students, working professionals, families, senior citizens, delivery personnel, and members of the local community.",
+    "instagram": "@navyugalliance",
+    "helpOf": "MH-56 प्रदिशक प्रवासी संगठन, नांदुरा",
+    "socialMediaPartner": "Nandura Explorer",
+    "currentStatus": "Preparations Underway 💧 Coming Soon 💧"
+  },
+  {
+    "id": "sankalp-hanuman-sangeet-mahotsav",
+    "title": "Sankalp: Hanuman Sangeet Mahotsav",
+    "date": "2026-06-14",
+    "description": "Hanuman Sangeet Mahotsav is a devotional musical celebration dedicated to Lord Hanuman, bringing together devotees through soulful bhajans, spiritual performances, and an atmosphere of faith, unity, and devotion. The event aims to strengthen cultural values and create a memorable spiritual experience for the community.",
+    "tagline": "हर संकट का अंत, बजरंग के संग",
+    "organizer": "NavYug Alliance",
+    "presentedBy": "NavYug Alliance",
+    "location": "Nandura, Maharashtra",
+    "theme": "Faith • Devotion • Music • Unity • Culture",
+    "objective": "To promote devotion, cultural heritage, and community bonding through an evening of bhajans, spiritual music, and collective celebration of Lord Hanuman's teachings and values.",
+    "featuredAttraction": "Bhajan Sandhya & Hanuman Sangeet Mahotsav",
+    "targetAudience": "Devotees of Lord Hanuman, families, youth, spiritual seekers, bhajan enthusiasts, and members of the local community.",
+    "instagram": "@navyugalliance",
+    "currentStatus": "Preparations Underway 🚩 Coming Soon 🚩"
   }
 ]
