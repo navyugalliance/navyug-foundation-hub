@@ -225,7 +225,7 @@ const FoundersSection = () => {
 
                 <button
                   onClick={() => setSelectedFounder(null)}
-                  className="absolute top-5 right-5 w-11 h-11 flex items-center justify-center rounded-full border border-primary/10 hover:border-gold hover:text-gold transition-all z-10 bg-background/80"
+                  className="absolute top-5 right-5 w-11 h-11 flex items-center justify-center rounded-full border border-primary/10 hover:border-gold hover:text-gold transition-all z-20 bg-background/80"
                   aria-label="Close modal"
                 >
                   <X className="w-5 h-5" />
