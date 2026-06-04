@@ -3,9 +3,9 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Calendar, Check, X, ArrowRight } from "lucide-react";
 import { EventItem, isCompleted, formatEventDate } from "@/lib/events";
-import jaldharaImg from "@/assets/jaldhara.png";
-import sankalpImg from "@/assets/sankalp.png";
-import careerImg from "@/assets/career.png";
+import jaldharaImg from "@/assets/jaldhara.webp";
+import sankalpImg from "@/assets/sankalp.webp";
+import careerImg from "@/assets/career.webp";
 
 interface Props {
   event: EventItem;

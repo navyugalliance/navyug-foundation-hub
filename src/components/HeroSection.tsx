@@ -329,18 +329,16 @@ const HeroSection = () => {
             className="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:text-gold hover:border-gold hover:shadow-md transition-all duration-300"
             aria-label="Scroll Down"
           >
-            <motion.svg
+            <svg
               width="16"
               height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2.5"
-              animate={{ y: [0, 4, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
             >
               <path d="M12 5v14M5 12l7 7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-            </motion.svg>
+            </svg>
           </a>
           
           <div className="relative">
