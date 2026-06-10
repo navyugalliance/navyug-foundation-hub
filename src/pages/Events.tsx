@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import EventCard from "@/components/EventCard";
 import Footer from "@/components/Footer";
 import { getAllEvents, isCompleted } from "@/lib/events";
+import SEO from "@/components/SEO";
 
 const Events = () => {
   const all = getAllEvents();
@@ -12,6 +13,11 @@ const Events = () => {
 
   return (
     <main className="overflow-x-hidden bg-[#F8F5EE] paper-texture min-h-screen flex flex-col justify-between select-none">
+      <SEO 
+        title="NavYug Alliance Initiatives & Milestones — Together We Rise"
+        description="Explore the journal of upcoming initiatives and past milestones of NavYug Alliance, promoting youth leadership and social impact."
+        keywords="Navyug Alliance Events, Navyug Foundation Initiatives, Community Projects, Social Campaigns, Youth Leadership Action"
+      />
       
       {/* Red margin line on left */}
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[2px] bg-red-400/10 pointer-events-none z-10" />

@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Trash2, Plus, Download, RotateCcw, Save, ImagePlus, X } from "lucide-react";
 import EventCard from "@/components/EventCard";
+import SEO from "@/components/SEO";
 
 const emptyEvent = (): EventItem => ({
   id: `event-${Date.now()}`,
@@ -107,7 +108,11 @@ const ManageEvents = () => {
 
   return (
     <main className="min-h-screen bg-[#F8F5EE] paper-texture flex flex-col justify-between select-none relative">
-      
+      <SEO
+        title="Initiatives Journal Editor — NavYug Alliance"
+        description="Internal management dashboard for NavYug Alliance events."
+        noindex={true}
+      />
       {/* Left red margin line */}
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[2px] bg-red-400/10 pointer-events-none z-10" />
 
