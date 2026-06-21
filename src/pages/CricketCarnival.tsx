@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
+import logo from "@/assets/logo.png";
 
 interface PlayerRoster {
   number: number;
@@ -281,6 +282,13 @@ const CricketCarnival = () => {
               </Link>
               
               <div className="mt-2 text-center max-w-3xl mx-auto space-y-4">
+                <div className="flex justify-center mb-2">
+                  <img 
+                    src={logo} 
+                    alt="NavYug Logo" 
+                    className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-[0_2px_8px_rgba(212,166,74,0.2)]" 
+                  />
+                </div>
                 <span className="bg-gold/15 text-gold border border-gold/30 px-3.5 py-1 text-[11px] font-sans font-bold uppercase tracking-widest rounded-full shadow-inner">
                   🏏 Registrations Open 🏆
                 </span>
@@ -508,6 +516,16 @@ const CricketCarnival = () => {
               {/* Card 1: Google-Form Branded Header Block */}
               <div className="bg-white rounded-lg border-t-[10px] border-primary shadow-sm border-x border-b border-neutral-200 overflow-hidden">
                 <div className="p-6 md:p-8 space-y-3.5">
+                  <div className="flex items-center justify-between gap-4 pb-2">
+                    <img 
+                      src={logo} 
+                      alt="NavYug Logo" 
+                      className="w-12 h-12 md:w-14 md:h-14 object-contain" 
+                    />
+                    <span className="bg-primary/5 text-primary text-xs font-bold px-3 py-1.5 rounded-full border border-primary/10">
+                      Official Event Form
+                    </span>
+                  </div>
                   <h1 className="text-2xl md:text-3.5xl font-bold tracking-tight text-neutral-800 font-sans">
                     Navyug Cricket Carnival 2026
                   </h1>
