@@ -283,11 +283,13 @@ const CricketCarnival = () => {
               
               <div className="mt-2 text-center max-w-3xl mx-auto space-y-4">
                 <div className="flex justify-center mb-2">
-                  <img 
-                    src={logo} 
-                    alt="NavYug Logo" 
-                    className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-[0_2px_8px_rgba(212,166,74,0.2)]" 
-                  />
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center p-3.5 shadow-lg border border-gold/30">
+                    <img 
+                      src={logo} 
+                      alt="NavYug Logo" 
+                      className="w-full h-full object-contain" 
+                    />
+                  </div>
                 </div>
                 <span className="bg-gold/15 text-gold border border-gold/30 px-3.5 py-1 text-[11px] font-sans font-bold uppercase tracking-widest rounded-full shadow-inner">
                   🏏 Registrations Open 🏆
