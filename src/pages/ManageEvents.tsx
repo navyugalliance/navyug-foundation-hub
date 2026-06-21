@@ -4,6 +4,7 @@ import {
   EventItem,
   EventImage,
   EventButton,
+  FormField,
   getAllEvents,
   saveAllEvents,
   resetToSeed,
@@ -13,8 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Trash2, Plus, Download, RotateCcw, Save, ImagePlus, X } from "lucide-react";
+import { ArrowLeft, Trash2, Plus, Download, RotateCcw, Save, ImagePlus, X, ArrowUp, ArrowDown } from "lucide-react";
 import EventCard from "@/components/EventCard";
 import SEO from "@/components/SEO";
 
@@ -227,6 +229,49 @@ const EventEditor = ({ event, onChange, onDelete }: EditorProps) => {
   const removeButton = (i: number) =>
     onChange({ buttons: (event.buttons || []).filter((_, idx) => idx !== i) });
 
+  const updateFormField = (i: number, patch: Partial<FormField>) => {
+    const next = [...(event.formFields || [])];
+    next[i] = { ...next[i], ...patch } as FormField;
+    onChange({ formFields: next });
+  };
+
+  const addFormField = () => {
+    const newField: FormField = {
+      id: `field_${Date.now()}`,
+      label: "",
+      type: "text",
+      required: true,
+    };
+    onChange({ formFields: [...(event.formFields || []), newField] });
+  };
+
+  const removeFormField = (i: number) => {
+    const next = (event.formFields || []).filter((_, idx) => idx !== i);
+    onChange({ formFields: next });
+  };
+
+  const moveFormField = (i: number, direction: -1 | 1) => {
+    const fields = [...(event.formFields || [])];
+    const targetIdx = i + direction;
+    if (targetIdx < 0 || targetIdx >= fields.length) return;
+    const temp = fields[i];
+    fields[i] = fields[targetIdx];
+    fields[targetIdx] = temp;
+    onChange({ formFields: fields });
+  };
+
+  const loadDefaultFormFields = () => {
+    const defaults: FormField[] = [
+      { id: "fullName", label: "Full Name", type: "text", required: true },
+      { id: "email", label: "Email Address", type: "email", required: true },
+      { id: "phone", label: "Phone Number", type: "tel", required: true },
+      { id: "age", label: "Age", type: "number", required: true },
+      { id: "role", label: "Player Role", type: "select", required: true, options: ["Batsman", "Bowler", "All-Rounder", "Wicketkeeper"] },
+      { id: "teamName", label: "Team Name", type: "text", required: false }
+    ];
+    onChange({ formFields: defaults });
+  };
+
   return (
     <div className="grid lg:grid-cols-12 gap-8 items-start border-b border-primary/10 pb-16">
       
@@ -407,6 +452,198 @@ const EventEditor = ({ event, onChange, onDelete }: EditorProps) => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Dynamic Registration Form Builder */}
+        <div className="mt-6 border-t border-dashed border-neutral-200 pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <Label className="text-sm font-bold text-primary block">Registration Setup (Google Forms integration)</Label>
+              <span className="text-[10px] text-neutral-400 font-sans block mt-0.5">
+                Enable self-hosted forms or link straight to an external Google Form.
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-sans text-neutral-500 font-semibold">Registration Type</span>
+              <select
+                className="flex h-8 rounded-sm border border-neutral-300 bg-background px-2 text-xs font-sans focus:outline-none focus:ring-1 focus:ring-primary w-40 text-primary"
+                value={event.registrationType || (event.registrationEnabled ? "internal" : "none")}
+                onChange={(e) => {
+                  const val = e.target.value as "none" | "internal" | "external";
+                  onChange({
+                    registrationType: val,
+                    registrationEnabled: val !== "none"
+                  });
+                }}
+              >
+                <option value="none">Disabled</option>
+                <option value="internal">Internal Form Builder</option>
+                <option value="external">External Google Form</option>
+              </select>
+            </div>
+          </div>
+
+          {event.registrationType === "external" && (
+            <div className="space-y-4 bg-neutral-50/50 p-4 border border-neutral-200 rounded-sm">
+              <Field label="Google Form / External Link URL">
+                <Input
+                  placeholder="https://docs.google.com/forms/d/..."
+                  value={event.externalFormUrl || ""}
+                  onChange={(e) => onChange({ externalFormUrl: e.target.value })}
+                  className="font-sans border-neutral-300 bg-white text-primary"
+                />
+              </Field>
+              <p className="text-[10px] text-neutral-400 font-sans">
+                When users click "Register Now", they will be redirected to this Google Form / URL in a new tab.
+              </p>
+            </div>
+          )}
+
+          {(event.registrationType === "internal" || (!event.registrationType && event.registrationEnabled)) && (
+            <div className="space-y-4 bg-neutral-50/50 p-4 border border-neutral-200 rounded-sm">
+              <div className="grid md:grid-cols-2 gap-4">
+                <Field label="Form Submit Endpoint (Vercel API / Apps Script)">
+                  <Input
+                    placeholder="/api/register or Google Apps Script URL"
+                    value={event.formSubmitUrl || ""}
+                    onChange={(e) => onChange({ formSubmitUrl: e.target.value })}
+                    className="font-sans border-neutral-300 bg-white text-primary"
+                  />
+                </Field>
+                <div className="flex items-end">
+                  <Button
+                    onClick={loadDefaultFormFields}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-full h-10 border-neutral-300 bg-white hover:bg-neutral-100 font-sans font-semibold text-xs text-primary"
+                  >
+                    Load Default Fields (Cricket)
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex justify-between items-center pb-2 border-b border-neutral-200">
+                  <Label className="text-xs font-bold text-neutral-600">Form Questions / Fields</Label>
+                  <Button
+                    onClick={addFormField}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs border-neutral-300 font-sans bg-white text-primary"
+                  >
+                    <Plus className="w-3 h-3 mr-1" /> Add Custom Field
+                  </Button>
+                </div>
+
+                {(event.formFields || []).length === 0 && (
+                  <p className="text-xs text-neutral-400 text-center py-4 italic font-sans">
+                    No fields added yet. Click "Load Default Fields" or add custom fields.
+                  </p>
+                )}
+
+                <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                  {(event.formFields || []).map((field, i) => (
+                    <div
+                      key={field.id + i}
+                      className="bg-white p-3 border border-neutral-200 rounded-sm shadow-sm space-y-2 relative"
+                    >
+                      <div className="flex gap-2 items-center">
+                        <Input
+                          placeholder="Question Label (e.g. Player Name)"
+                          value={field.label}
+                          onChange={(e) => updateFormField(i, { label: e.target.value })}
+                          className="font-sans border-neutral-300 h-8 text-xs flex-1 text-primary"
+                        />
+                        <select
+                          className="flex h-8 rounded-sm border border-neutral-300 bg-background px-2 text-xs font-sans focus:outline-none focus:ring-1 focus:ring-primary w-28 text-primary"
+                          value={field.type}
+                          onChange={(e) => {
+                            const val = e.target.value as any;
+                            updateFormField(i, {
+                              type: val,
+                              options: val === "select" || val === "radio" || val === "checkboxes" ? field.options || [] : undefined,
+                            });
+                          }}
+                        >
+                          <option value="text">Short Text</option>
+                          <option value="textarea">Paragraph (Long)</option>
+                          <option value="number">Number</option>
+                          <option value="email">Email</option>
+                          <option value="tel">Phone</option>
+                          <option value="select">Dropdown (Select)</option>
+                          <option value="radio">Multiple Choice (Radio)</option>
+                          <option value="checkboxes">Checkboxes (Select Many)</option>
+                          <option value="checkbox">Single Agreement Checkbox</option>
+                          <option value="date">Date Picker</option>
+                          <option value="time">Time Picker</option>
+                        </select>
+
+                        <div className="flex items-center gap-1.5 px-1">
+                          <label className="text-[10px] font-sans font-semibold text-neutral-500">Required</label>
+                          <input
+                            type="checkbox"
+                            checked={field.required}
+                            onChange={(e) => updateFormField(i, { required: e.target.checked })}
+                            className="rounded-sm border-neutral-300"
+                          />
+                        </div>
+
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            type="button"
+                            variant="ghost"
+                            className="h-7 w-7 p-0"
+                            disabled={i === 0}
+                            onClick={() => moveFormField(i, -1)}
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            type="button"
+                            variant="ghost"
+                            className="h-7 w-7 p-0"
+                            disabled={i === (event.formFields || []).length - 1}
+                            onClick={() => moveFormField(i, 1)}
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            type="button"
+                            variant="ghost"
+                            className="h-7 w-7 p-0 text-destructive hover:bg-destructive/5 hover:text-destructive"
+                            onClick={() => removeFormField(i)}
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {(field.type === "select" || field.type === "radio" || field.type === "checkboxes") && (
+                        <div className="flex gap-2 items-center pl-1">
+                          <Label className="text-[10px] text-neutral-400 font-bold uppercase w-16">Options:</Label>
+                          <Input
+                            placeholder="Options (comma separated, e.g. Option 1, Option 2)"
+                            value={field.options ? field.options.join(", ") : ""}
+                            onChange={(e) =>
+                              updateFormField(i, {
+                                options: e.target.value.split(",").map((s) => s.trim()),
+                              })
+                            }
+                            className="font-sans border-neutral-300 h-7 text-[11px] flex-1 text-primary"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

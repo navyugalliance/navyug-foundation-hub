@@ -1,5 +1,116 @@
 [
   {
+    "id": "navyug-cricket-carnival-2026",
+    "title": "Navyug Cricket Carnival 2026",
+    "date": "2026-07-10",
+    "description": "The Navyug Cricket Carnival 2026 is a premium sports initiative celebrating local talent, teamwork, and the passion for cricket. Every match tells a story of perseverance, dedication, and sportsmanship. Join us for a thrilling tournament where local teams battle for glory, and where every run and wicket write a new chapter in leadership and collective effort.",
+    "tagline": "Every Victory Has a Story",
+    "organizer": "NavYug Alliance",
+    "presentedBy": "NavYug Alliance",
+    "location": "Nandura, Maharashtra",
+    "theme": "Sports • Teamwork • Glory • Cricket • Youth Leadership",
+    "objective": "To foster sportsmanship, teamwork, and youth engagement through a competitive cricket carnival, highlighting the stories of struggle and triumph behind every victory.",
+    "featuredAttraction": "Dynamic Cricket Tournament & Post-Match Awards",
+    "targetAudience": "Youth, Local Cricket Teams, Sports Enthusiasts",
+    "instagram": "@navyugalliance",
+    "currentStatus": "Registrations Open 🏏 Join the Battle 🏆",
+    "registrationEnabled": true,
+    "registrationType": "internal",
+    "formSubmitUrl": "/api/register",
+    "formFields": [
+      {
+        "id": "section_team",
+        "label": "📋 SECTION 1 — Team Information",
+        "type": "section",
+        "required": false
+      },
+      {
+        "id": "teamName",
+        "label": "Team Name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "teamLogoColor",
+        "label": "Team Logo / Jersey Color",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "section_captain",
+        "label": "👤 SECTION 2 — Captain Details",
+        "type": "section",
+        "required": false
+      },
+      {
+        "id": "captainName",
+        "label": "Captain's Full Name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "captainAge",
+        "label": "Age",
+        "type": "number",
+        "required": true
+      },
+      {
+        "id": "captainWhatsApp",
+        "label": "WhatsApp Number (if different)",
+        "type": "tel",
+        "required": false
+      },
+      {
+        "id": "captainEmail",
+        "label": "Email Address",
+        "type": "email",
+        "required": true
+      },
+      {
+        "id": "captainCity",
+        "label": "City",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "section_players",
+        "label": "🏏 SECTION 3 — Player Details (7 Playing + 1 Substitute)",
+        "type": "section",
+        "required": false
+      },
+      {
+        "id": "players",
+        "label": "Player Roster",
+        "type": "playersGrid",
+        "required": true
+      },
+      {
+        "id": "section_declaration",
+        "label": "📝 SECTION 4 — Declaration",
+        "type": "section",
+        "required": false
+      },
+      {
+        "id": "captainSignature",
+        "label": "Captain Signature (Type Full Name)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "registrationDate",
+        "label": "Date of Registration",
+        "type": "date",
+        "required": true
+      },
+      {
+        "id": "agreement",
+        "label": "I confirm all players are eligible and agree to tournament rules",
+        "type": "checkbox",
+        "required": true
+      }
+    ]
+  },
+  {
     "id": "sapno-ki-udaan",
     "title": "Sapno Ki Udaan",
     "date": "2026-03-21",

@@ -13,6 +13,14 @@ export interface EventImage {
   alt?: string;
 }
 
+export interface FormField {
+  id: string;
+  label: string;
+  type: "text" | "number" | "email" | "tel" | "select" | "textarea" | "checkbox" | "radio" | "checkboxes" | "date" | "time" | "section" | "playersGrid";
+  required: boolean;
+  options?: string[]; // for select / checkbox / radio options
+}
+
 export interface EventItem {
   id: string;
   title: string;
@@ -34,6 +42,12 @@ export interface EventItem {
   socialMediaPartner?: string;
   currentStatus?: string;
   buttons?: EventButton[];
+  // Registration fields
+  registrationEnabled?: boolean;
+  registrationType?: "none" | "internal" | "external";
+  externalFormUrl?: string;
+  formSubmitUrl?: string;
+  formFields?: FormField[];
 }
 
 const STORAGE_KEY = "navyug_events_v1";
