@@ -243,56 +243,63 @@ const CricketCarnival = () => {
   };
 
   return (
-    <main className="overflow-x-hidden bg-[#F8F5EE] paper-texture min-h-screen flex flex-col justify-between select-none relative">
+    <main className={`overflow-x-hidden min-h-screen flex flex-col justify-between relative ${
+      registerModalOpen 
+        ? "bg-[#F0F4F9]" 
+        : "bg-[#F8F5EE] paper-texture select-none"
+    }`}>
       <SEO 
         title="Navyug Cricket Carnival 2026 — Register Your Team"
         description="Official landing page for Navyug Cricket Carnival 2026. Join Nandura's premium cricket tournament. View match rules, prizes, and register your team roster."
         keywords="Navyug Cricket Carnival, Navyug Alliance, Nandura Cricket, Cricket Registration, Tournament Rules, Youth Sports Maharashtra"
       />
 
-      {/* Red margin binder line on left (Responsive positioning) */}
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[2px] bg-red-400/10 pointer-events-none z-10" />
+      {/* Red margin binder line on left (Only render on details page) */}
+      {!registerModalOpen && (
+        <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[2px] bg-red-400/10 pointer-events-none z-10" />
+      )}
 
       <div>
-        {/* Header Section (Torn Notebook Sheet Design) */}
-        <section className="relative bg-primary text-primary-foreground py-16 pb-24 overflow-hidden torn-edge-bottom">
-          <div className="absolute inset-0 grid-paper pointer-events-none opacity-5" />
-          
-          {/* pl-12 clears the notebook margin line on mobile, md:pl-24 for desktop */}
-          <div className="container mx-auto pl-12 pr-6 md:pl-24 md:pr-16 relative z-10">
-            <Link
-              to="/events"
-              className="group inline-flex items-center gap-2 text-primary-foreground/80 hover:text-gold transition-colors text-sm font-sans font-semibold mb-6"
-            >
-              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Back to Journal
-            </Link>
+        {/* Header Section (Only render on details page) */}
+        {!registerModalOpen && (
+          <section className="relative bg-primary text-primary-foreground py-16 pb-24 overflow-hidden torn-edge-bottom">
+            <div className="absolute inset-0 grid-paper pointer-events-none opacity-5" />
             
-            <div className="mt-2 text-center max-w-3xl mx-auto space-y-4">
-              <span className="bg-gold/15 text-gold border border-gold/30 px-3.5 py-1 text-[11px] font-sans font-bold uppercase tracking-widest rounded-full shadow-inner">
-                {registerModalOpen ? "📋 Registration Wizard" : "🏏 Registrations Open 🏆"}
-              </span>
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-primary-foreground tracking-tight font-serif pt-1">
-                Navyug Cricket Carnival 2026
-              </h1>
-              <p className="font-handwriting text-xl md:text-3xl text-gold rotate-[-1deg] inline-block mt-1">
-                Every Victory Has a Story
-              </p>
+            <div className="container mx-auto pl-12 pr-6 md:pl-24 md:pr-16 relative z-10">
+              <Link
+                to="/events"
+                className="group inline-flex items-center gap-2 text-primary-foreground/80 hover:text-gold transition-colors text-sm font-sans font-semibold mb-6"
+              >
+                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Back to Journal
+              </Link>
               
-              <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-primary-foreground/90 font-sans pt-4">
-                <span className="flex items-center gap-2 bg-primary-foreground/5 px-4 py-2 border border-primary-foreground/10 rounded-sm">
-                  <Calendar className="w-4 h-4 text-gold" />
-                  July 11 & 12, 2026
+              <div className="mt-2 text-center max-w-3xl mx-auto space-y-4">
+                <span className="bg-gold/15 text-gold border border-gold/30 px-3.5 py-1 text-[11px] font-sans font-bold uppercase tracking-widest rounded-full shadow-inner">
+                  🏏 Registrations Open 🏆
                 </span>
-                <span className="flex items-center gap-2 bg-primary-foreground/5 px-4 py-2 border border-primary-foreground/10 rounded-sm">
-                  <MapPin className="w-4 h-4 text-gold" />
-                  Nandura, Maharashtra
-                </span>
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-primary-foreground tracking-tight font-serif pt-1">
+                  Navyug Cricket Carnival 2026
+                </h1>
+                <p className="font-handwriting text-xl md:text-3xl text-gold rotate-[-1deg] inline-block mt-1">
+                  Every Victory Has a Story
+                </p>
+                
+                <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-primary-foreground/90 font-sans pt-4">
+                  <span className="flex items-center gap-2 bg-primary-foreground/5 px-4 py-2 border border-primary-foreground/10 rounded-sm">
+                    <Calendar className="w-4 h-4 text-gold" />
+                    July 11 & 12, 2026
+                  </span>
+                  <span className="flex items-center gap-2 bg-primary-foreground/5 px-4 py-2 border border-primary-foreground/10 rounded-sm">
+                    <MapPin className="w-4 h-4 text-gold" />
+                    Nandura, Maharashtra
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* Conditional View: Details vs Registration Flow */}
+        {/* Conditional View: Details page vs Google Form style inline Roster view */}
         {!registerModalOpen ? (
           /* Main Landing Page Details View */
           <section className="py-12 md:py-20 container mx-auto pl-12 pr-6 md:pl-24 md:pr-16 relative z-20">
@@ -465,418 +472,424 @@ const CricketCarnival = () => {
             </div>
           </section>
         ) : (
-          /* Inline Registration Wizard View - Full Width & Optimized for Mobile Form-Filling */
-          <section className="py-8 md:py-12 container mx-auto pl-12 pr-6 md:pl-24 md:pr-16 relative z-20 max-w-3xl">
-            <div className="relative bg-[#FFFDF6] border border-neutral-300/40 rounded-sm shadow-xl p-5 md:p-10 text-left overflow-hidden">
-              {/* Notebook bind style lines */}
-              <div className="absolute inset-0 lined-paper opacity-25 pointer-events-none" />
-              <div className="absolute left-6 top-0 bottom-0 w-[1.5px] bg-red-400/20 pointer-events-none" />
-
-              {/* Cancel Button */}
+          /* Google Form Style Inline Roster Registration View - Standard CSS Layout (No binder lines, no margins) */
+          <section className="py-6 md:py-10 max-w-2xl mx-auto px-4 relative z-20 font-sans">
+            
+            {/* Top Toolbar Actions */}
+            <div className="flex justify-between items-center mb-6">
               <button
                 onClick={() => {
-                  if (success || window.confirm("Are you sure you want to go back? Filled data will be lost.")) {
+                  if (success || window.confirm("Are you sure you want to go back? Filled details will be lost.")) {
                     setRegisterModalOpen(false);
                     resetForm();
                   }
                 }}
                 type="button"
-                className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-primary text-xs font-bold font-sans uppercase tracking-wider mb-6 relative z-10"
+                className="inline-flex items-center gap-1 text-xs font-bold text-neutral-500 hover:text-neutral-800 transition-colors uppercase tracking-wider bg-white px-3.5 py-2 rounded-full shadow-sm border border-neutral-200"
               >
-                ← Cancel & Back to Details
+                ← Back to Details
               </button>
+              {!success && (
+                <span className="bg-primary/5 text-primary text-xs font-bold px-3 py-1.5 rounded-full border border-primary/10">
+                  Step {currentStep} of 2
+                </span>
+              )}
+            </div>
 
-              <div className="relative z-10 pt-2">
-                {/* Step Progress Indicators */}
-                {!success && (
-                  <div className="flex items-center justify-center gap-2 mb-8 font-sans">
-                    <div className={`w-9 h-9 rounded-full border flex items-center justify-center text-sm font-bold ${
-                      currentStep === 1 ? "bg-primary text-background border-primary" : "bg-background text-primary border-neutral-300"
-                    }`}>
-                      1
-                    </div>
-                    <span className="w-12 h-0.5 bg-neutral-300" />
-                    <div className={`w-9 h-9 rounded-full border flex items-center justify-center text-sm font-bold ${
-                      currentStep === 2 ? "bg-primary text-background border-primary" : "bg-background text-primary border-neutral-300"
-                    }`}>
-                      2
-                    </div>
+            <div className="space-y-6">
+
+              {/* Card 1: Google-Form Branded Header Block */}
+              <div className="bg-white rounded-lg border-t-[10px] border-primary shadow-sm border-x border-b border-neutral-200 overflow-hidden">
+                <div className="p-6 md:p-8 space-y-3.5">
+                  <h1 className="text-2xl md:text-3.5xl font-bold tracking-tight text-neutral-800 font-sans">
+                    Navyug Cricket Carnival 2026
+                  </h1>
+                  <p className="text-neutral-600 text-sm md:text-base font-sans font-medium tracking-wide">
+                    Every Victory Has a Story
+                  </p>
+                  
+                  <div className="border-t border-neutral-100 pt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-neutral-500 font-sans">
+                    <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-primary" /> July 11 & 12, 2026</span>
+                    <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-primary" /> Nandura, Maharashtra</span>
                   </div>
-                )}
+                </div>
+              </div>
 
-                {/* STEP 1: RULES AGREEMENT */}
-                {currentStep === 1 && !success && (
-                  <div className="space-y-6">
-                    <div className="border-b border-dashed border-neutral-300 pb-4">
-                      <h3 className="text-2xl font-bold font-serif text-primary">Rules & Format Agreement</h3>
-                      <p className="font-handwriting text-xl text-gold mt-1">Navyug Cricket Carnival 2026</p>
+              {/* STEP 1: RULES & FORMAT AGREEMENT VIEW */}
+              {currentStep === 1 && !success && (
+                <>
+                  {/* Card 2: Rules content block */}
+                  <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 space-y-4">
+                    <div className="border-b border-neutral-100 pb-3 flex items-center gap-2">
+                      <ShieldCheck className="w-5 h-5 text-primary" />
+                      <h3 className="text-base font-bold text-neutral-800 uppercase tracking-wide">Tournament Guidelines</h3>
                     </div>
 
-                    <div className="bg-white border border-neutral-200 p-5 rounded-sm space-y-4 max-h-80 overflow-y-auto font-sans text-xs md:text-sm text-neutral-600 leading-relaxed scrollbar-thin">
-                      <h4 className="font-bold text-primary text-sm uppercase tracking-wider">Tournament Rules & Guidelines</h4>
-                      <ol className="list-decimal pl-4 space-y-3">
+                    <div className="space-y-3 text-xs md:text-sm text-neutral-600 leading-relaxed max-h-96 overflow-y-auto pr-1">
+                      <ol className="list-decimal pl-4 space-y-3.5">
                         <li>
-                          <strong>Limited Seats — First Come First Serve:</strong> Slots are strictly limited and filled on a first-come, first-served basis. Submitting this registration does <strong>NOT</strong> guarantee a spot in the playing team. Our core committee will verify your details and contact you via email to confirm slot allocation.
+                          <strong>Limited Seats — First Come First Serve:</strong> Team entries are strictly limited. Registering does <strong>NOT</strong> guarantee playing slot allocation. The core committee will verify details and contact you via email.
                         </li>
                         <li>
-                          <strong>Aadhaar Card Verification:</strong> Registrants must upload a single, combined file (PDF, ZIP, or Image) containing clear copies of Aadhaar cards for all 8 team players. The names on the roster must match the Aadhaar cards exactly. Any mismatch will result in registration cancellation.
+                          <strong>Aadhaar Card Requirement:</strong> You must upload a single combined file (PDF, ZIP, or Image) containing copies of Aadhaar cards for all 8 roster players.
                         </li>
                         <li>
-                          <strong>Roster Constraint:</strong> Team rosters are capped at exactly 8 players (7 playing on field + 1 substitute). Once registration is submitted, roster adjustments can only be requested via core committee approval.
+                          <strong>Roster Constraints:</strong> Each team must register exactly 8 players (7 playing + 1 substitute). Player #8 defaults as the substitute.
                         </li>
                         <li>
-                          <strong>Over Format:</strong> Matches will consist of exactly <strong>6 overs per inning</strong>.
+                          <strong>Overs Format:</strong> Matches are structured as exactly <strong>6 overs per inning</strong>.
                         </li>
                         <li>
-                          <strong>Double Registration Prohibited:</strong> A player cannot be registered in more than one team. If a player is found on multiple rosters, both teams face penalty/disqualification.
+                          <strong>Strict Punctuality:</strong> Teams must report 30 minutes before their match. Failure to do so leads to immediate forfeit.
                         </li>
                         <li>
-                          <strong>Punctuality:</strong> Teams must report to the ground at least 30 minutes before their scheduled match. Failure to do so will result in an immediate forfeit.
-                        </li>
-                        <li>
-                          <strong>Umpire Authority:</strong> Umpires hold absolute authority. Arguing, abusing, or demonstrating unsportsmanlike behavior toward umpires, match officials, or opponents will lead to immediate individual or team ban.
-                        </li>
-                        <li>
-                          <strong>Payment & Confirmation:</strong> Completing this online form registers your roster in the pool. If your team is allocated a playing slot, our committee will contact the captain via email with instructions to verify details and complete the fee payment.
+                          <strong>Code of Conduct:</strong> Absolute respect for umpires and opponents is mandatory. Unsportsmanlike behavior will cause direct disqualification.
                         </li>
                       </ol>
                     </div>
+                  </div>
 
-                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-sm flex flex-col gap-2">
-                      <div className="flex items-start gap-2.5">
-                        <Info className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                        <div className="text-[11px] md:text-xs text-amber-800 leading-relaxed font-sans">
-                          <strong>No Guarantee of Spot:</strong> Submitting this registration does NOT guarantee your spot in the playing team. Slots are limited on a first-come, first-served basis. Our team will review your roster and contact the captain via email.
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-2.5 border-t border-amber-200/50 pt-2">
-                        <Info className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                        <div className="text-[11px] md:text-xs text-amber-800 leading-relaxed font-sans">
-                          <strong>File Upload Notice:</strong> Please make sure you have the collective Aadhaar file ready. It must contain Aadhaar cards of all 8 members (PDF/ZIP preferred, maximum 8MB size limit).
-                        </div>
+                  {/* Card 3: Notice & Warnings */}
+                  <div className="bg-amber-50 rounded-lg shadow-sm border border-amber-200 p-5 space-y-3 flex flex-col">
+                    <div className="flex items-start gap-2.5">
+                      <Info className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-xs text-amber-800 leading-relaxed font-sans">
+                        <strong>Review Process:</strong> The committee will verify all players' names and details against Aadhaar records. We will contact you via your captain's email to notify slot allocation results.
                       </div>
                     </div>
-
-                    <div className="pt-2">
-                      <label className="flex items-center gap-3 cursor-pointer text-primary font-sans text-sm md:text-base">
-                        <input
-                          type="checkbox"
-                          checked={agreedToRules}
-                          onChange={(e) => setAgreedToRules(e.target.checked)}
-                          className="rounded-sm border-neutral-300 text-primary focus:ring-primary w-5 h-5"
-                        />
-                        <span className="font-semibold select-none text-xs md:text-sm leading-normal">I have read, understood, and agree to follow all rules and guidelines.</span>
-                      </label>
+                    <div className="flex items-start gap-2.5 border-t border-amber-200/50 pt-2">
+                      <Info className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-xs text-amber-800 leading-relaxed font-sans">
+                        <strong>Upload Check:</strong> Ensure the combined Aadhaar document has legible records for all 8 players before advancing.
+                      </div>
                     </div>
+                  </div>
 
-                    <div className="pt-4 border-t border-neutral-200 flex justify-end">
+                  {/* Card 4: Agreement Action */}
+                  <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 flex flex-col gap-5">
+                    <label className="flex items-start gap-3 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={agreedToRules}
+                        onChange={(e) => setAgreedToRules(e.target.checked)}
+                        className="rounded border-neutral-300 text-primary focus:ring-primary w-5 h-5 mt-0.5"
+                      />
+                      <span className="text-xs md:text-sm font-semibold text-neutral-800 leading-snug">
+                        I confirm that our team agrees to abide by all the tournament guidelines, overs formats, and first-come first-serve allocation terms.
+                      </span>
+                    </label>
+
+                    <div className="border-t border-neutral-100 pt-4 flex justify-end">
                       <button
                         type="button"
                         disabled={!agreedToRules}
                         onClick={() => setCurrentStep(2)}
-                        className="px-8 py-3.5 bg-primary text-background border border-primary text-xs md:text-sm font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all disabled:opacity-40 active:scale-95 shadow-sm"
+                        className="px-6 py-3 bg-primary text-white text-xs md:text-sm font-bold uppercase tracking-wider rounded-md transition-all hover:bg-primary/95 disabled:opacity-40 active:scale-95 shadow-sm"
                       >
                         Next: Roster Form
                       </button>
                     </div>
                   </div>
-                )}
+                </>
+              )}
 
-                {/* STEP 2: REGISTRATION FORM */}
-                {currentStep === 2 && !success && (
-                  <form onSubmit={handleSubmit} className="space-y-8 text-primary">
-                    <div className="border-b border-dashed border-neutral-300 pb-3">
-                      <h3 className="text-2xl font-bold font-serif text-primary">Team Details & Player Roster</h3>
-                      <p className="font-handwriting text-xl text-gold mt-1">Please fill in all details carefully</p>
-                    </div>
+              {/* STEP 2: REGISTRATION DETAILS FORM */}
+              {currentStep === 2 && !success && (
+                <form onSubmit={handleSubmit} className="space-y-6">
 
-                    {/* Team Info */}
-                    <div className="space-y-4">
-                      <h4 className="text-xs md:text-sm font-bold text-neutral-500 uppercase tracking-widest font-sans border-b border-neutral-200 pb-1">
+                  {/* Card 2: Team details */}
+                  <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 space-y-4">
+                    <div className="border-b border-neutral-100 pb-2">
+                      <h4 className="text-sm font-bold text-neutral-800 uppercase tracking-wider font-sans">
                         📋 Section 1: Team Details
                       </h4>
-                      <div className="space-y-1.5">
-                        <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Team Name *</label>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Team Name *</label>
+                      <input
+                        type="text"
+                        value={teamName}
+                        onChange={(e) => {
+                          setTeamName(e.target.value);
+                          if (errors.teamName) setErrors(prev => ({ ...prev, teamName: "" }));
+                        }}
+                        className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
+                        placeholder="e.g. Nandura Stars"
+                      />
+                      {errors.teamName && (
+                        <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.teamName}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Card 3: Captain info */}
+                  <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 space-y-6">
+                    <div className="border-b border-neutral-100 pb-2">
+                      <h4 className="text-sm font-bold text-neutral-800 uppercase tracking-wider font-sans">
+                        👤 Section 2: Captain Details
+                      </h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="space-y-2">
+                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Captain's Full Name *</label>
                         <input
                           type="text"
-                          value={teamName}
+                          value={captainName}
                           onChange={(e) => {
-                            setTeamName(e.target.value);
-                            if (errors.teamName) setErrors(prev => ({ ...prev, teamName: "" }));
+                            setCaptainName(e.target.value);
+                            if (errors.captainName) setErrors(prev => ({ ...prev, captainName: "" }));
                           }}
-                          className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                          placeholder="e.g. Nandura Stars"
+                          className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
                         />
-                        {errors.teamName && (
-                          <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.teamName}</p>
+                        {errors.captainName && (
+                          <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainName}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Age *</label>
+                        <input
+                          type="number"
+                          value={captainAge}
+                          onChange={(e) => {
+                            setCaptainAge(e.target.value);
+                            if (errors.captainAge) setErrors(prev => ({ ...prev, captainAge: "" }));
+                          }}
+                          className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
+                        />
+                        {errors.captainAge && (
+                          <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainAge}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">WhatsApp Number</label>
+                        <input
+                          type="tel"
+                          value={captainWhatsApp}
+                          onChange={(e) => setCaptainWhatsApp(e.target.value)}
+                          className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
+                          placeholder="e.g. +91 9876543210"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Email Address *</label>
+                        <input
+                          type="email"
+                          value={captainEmail}
+                          onChange={(e) => {
+                            setCaptainEmail(e.target.value);
+                            if (errors.captainEmail) setErrors(prev => ({ ...prev, captainEmail: "" }));
+                          }}
+                          className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
+                          placeholder="captain@example.com"
+                        />
+                        {errors.captainEmail && (
+                          <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainEmail}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 md:col-span-2">
+                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">City / Hometown *</label>
+                        <input
+                          type="text"
+                          value={captainCity}
+                          onChange={(e) => {
+                            setCaptainCity(e.target.value);
+                            if (errors.captainCity) setErrors(prev => ({ ...prev, captainCity: "" }));
+                          }}
+                          className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
+                          placeholder="e.g. Nandura"
+                        />
+                        {errors.captainCity && (
+                          <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainCity}</p>
                         )}
                       </div>
                     </div>
+                  </div>
 
-                    {/* Captain Info */}
-                    <div className="space-y-4 pt-2">
-                      <h4 className="text-xs md:text-sm font-bold text-neutral-500 uppercase tracking-widest font-sans border-b border-neutral-200 pb-1">
-                        👤 Section 2: Captain Details
+                  {/* Card 4: Player roster swiper details */}
+                  <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 space-y-6">
+                    <div className="border-b border-neutral-100 pb-2">
+                      <h4 className="text-sm font-bold text-neutral-800 uppercase tracking-wider font-sans">
+                        🏏 Section 3: Player Roster (7 Playing + 1 Substitute)
                       </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <p className="text-xs text-neutral-400 font-sans mt-1 leading-normal">
+                        Select a tab below to enter details. Player #8 is the Substitute.
+                      </p>
+                    </div>
+
+                    {/* Compact, clean horizontal scrollable buttons */}
+                    <div className="flex overflow-x-auto gap-2 py-2.5 -mx-4 px-4 scrollbar-thin">
+                      {players.map((p, idx) => {
+                        const filled = isPlayerFilled(idx);
+                        const active = activePlayerIndex === idx;
+                        return (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setActivePlayerIndex(idx)}
+                            className={`flex items-center justify-center gap-1.5 px-4 py-3 border rounded-md text-xs font-bold font-sans flex-shrink-0 min-w-[90px] transition-all active:scale-95 ${
+                              active
+                                ? "bg-primary text-white border-primary shadow-sm"
+                                : filled
+                                  ? "bg-green-50 text-green-700 border-green-200"
+                                  : "bg-neutral-50 text-neutral-600 border-neutral-200 hover:bg-neutral-100"
+                            }`}
+                          >
+                            Player #{p.number}
+                            {filled && <span className="text-green-600 font-bold text-xs">✓</span>}
+                            {idx === 7 && <span className="text-[9px] opacity-75 font-normal">(Sub)</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Sub-card active player inputs */}
+                    <div className="bg-neutral-50/50 p-5 border border-neutral-200 rounded-md space-y-4">
+                      <div className="flex justify-between items-center border-b border-neutral-200 pb-2">
+                        <span className="text-xs md:text-sm font-bold text-primary font-sans uppercase tracking-wider">
+                          Details for Player #{players[activePlayerIndex].number} {activePlayerIndex === 7 && <span className="text-gold font-bold ml-1 font-sans text-xs">(Substitute)</span>}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-primary">
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Captain's Full Name *</label>
+                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Full Name *</label>
                           <input
                             type="text"
-                            value={captainName}
-                            onChange={(e) => {
-                              setCaptainName(e.target.value);
-                              if (errors.captainName) setErrors(prev => ({ ...prev, captainName: "" }));
-                            }}
-                            className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
+                            value={players[activePlayerIndex].fullName}
+                            onChange={(e) => handlePlayerChange(activePlayerIndex, "fullName", e.target.value)}
+                            className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
                           />
-                          {errors.captainName && (
-                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainName}</p>
+                          {errors[`players_${activePlayerIndex}_fullName`] && (
+                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_fullName`]}</p>
                           )}
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Age *</label>
+                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Age *</label>
                           <input
                             type="number"
-                            value={captainAge}
-                            onChange={(e) => {
-                              setCaptainAge(e.target.value);
-                              if (errors.captainAge) setErrors(prev => ({ ...prev, captainAge: "" }));
-                            }}
-                            className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
+                            value={players[activePlayerIndex].age}
+                            onChange={(e) => handlePlayerChange(activePlayerIndex, "age", e.target.value)}
+                            className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
                           />
-                          {errors.captainAge && (
-                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainAge}</p>
+                          {errors[`players_${activePlayerIndex}_age`] && (
+                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_age`]}</p>
                           )}
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">WhatsApp Number</label>
+                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Mobile Number *</label>
                           <input
                             type="tel"
-                            value={captainWhatsApp}
-                            onChange={(e) => setCaptainWhatsApp(e.target.value)}
-                            className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                            placeholder="e.g. +91 9876543210"
+                            value={players[activePlayerIndex].mobileNumber}
+                            onChange={(e) => handlePlayerChange(activePlayerIndex, "mobileNumber", e.target.value)}
+                            className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
                           />
+                          {errors[`players_${activePlayerIndex}_mobileNumber`] && (
+                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_mobileNumber`]}</p>
+                          )}
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Email Address *</label>
+                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Playing Role *</label>
+                          <select
+                            value={players[activePlayerIndex].playingRole}
+                            onChange={(e) => handlePlayerChange(activePlayerIndex, "playingRole", e.target.value)}
+                            className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
+                          >
+                            <option value="Batsman">Batsman</option>
+                            <option value="Bowler">Bowler</option>
+                            <option value="All-Rounder">All-Rounder</option>
+                            <option value="Wicket-Keeper">Wicket-Keeper</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-1.5 sm:col-span-2">
+                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Email Address *</label>
                           <input
                             type="email"
-                            value={captainEmail}
-                            onChange={(e) => {
-                              setCaptainEmail(e.target.value);
-                              if (errors.captainEmail) setErrors(prev => ({ ...prev, captainEmail: "" }));
-                            }}
-                            className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                            placeholder="captain@example.com"
+                            value={players[activePlayerIndex].mail}
+                            onChange={(e) => handlePlayerChange(activePlayerIndex, "mail", e.target.value)}
+                            className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary"
+                            placeholder="player@example.com"
                           />
-                          {errors.captainEmail && (
-                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainEmail}</p>
-                          )}
-                        </div>
-
-                        <div className="space-y-1.5 md:col-span-2">
-                          <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">City / Hometown *</label>
-                          <input
-                            type="text"
-                            value={captainCity}
-                            onChange={(e) => {
-                              setCaptainCity(e.target.value);
-                              if (errors.captainCity) setErrors(prev => ({ ...prev, captainCity: "" }));
-                            }}
-                            className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                            placeholder="e.g. Nandura"
-                          />
-                          {errors.captainCity && (
-                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors.captainCity}</p>
+                          {errors[`players_${activePlayerIndex}_mail`] && (
+                            <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_mail`]}</p>
                           )}
                         </div>
                       </div>
-                    </div>
 
-                    {/* Players Roster Section (Horizontal Swiper tabs for Mobile compatibility) */}
-                    <div className="space-y-4 pt-2">
-                      <div className="border-b border-neutral-200 pb-2">
-                        <h4 className="text-xs md:text-sm font-bold text-neutral-500 uppercase tracking-widest font-sans">
-                          🏏 Section 3: Player Roster (7 Playing + 1 Substitute)
-                        </h4>
-                        <p className="text-[11px] md:text-xs text-neutral-400 font-sans mt-1 leading-normal">
-                          Select a player tab below to fill details. Player #8 is the Substitute.
-                        </p>
-                      </div>
-
-                      {/* Horizontally scrollable row of large numbers */}
-                      <div className="flex overflow-x-auto gap-2 py-2 -mx-4 px-4 scrollbar-thin">
-                        {players.map((p, idx) => {
-                          const filled = isPlayerFilled(idx);
-                          const active = activePlayerIndex === idx;
-                          return (
-                            <button
-                              key={idx}
-                              type="button"
-                              onClick={() => setActivePlayerIndex(idx)}
-                              className={`flex items-center justify-center gap-1.5 px-4 py-3 border rounded-md text-sm font-sans font-bold flex-shrink-0 min-w-[80px] transition-all active:scale-95 ${
-                                active
-                                  ? "bg-primary text-background border-primary shadow-md"
-                                  : filled
-                                    ? "bg-green-50 text-green-700 border-green-200"
-                                    : "bg-background text-neutral-500 border-neutral-300 hover:bg-neutral-50"
-                              }`}
-                            >
-                              Player #{p.number}
-                              {filled && <span className="text-green-600 font-bold">✓</span>}
-                              {idx === 7 && <span className="text-[9px] opacity-75 font-normal">(Sub)</span>}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Card layout for active player entry */}
-                      <div className="bg-[#FFFDF6] p-5 border border-neutral-200 rounded-sm space-y-4 shadow-sm relative">
-                        <div className="flex justify-between items-center border-b border-neutral-100 pb-2 mb-1">
-                          <span className="text-xs md:text-sm font-bold text-primary font-sans uppercase tracking-wider">
-                            Details for Player #{players[activePlayerIndex].number} {activePlayerIndex === 7 && <span className="text-gold font-bold font-handwriting lowercase text-base ml-1">(Substitute)</span>}
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-primary">
-                          <div className="space-y-1.5">
-                            <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Full Name *</label>
-                            <input
-                              type="text"
-                              value={players[activePlayerIndex].fullName}
-                              onChange={(e) => handlePlayerChange(activePlayerIndex, "fullName", e.target.value)}
-                              className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                              placeholder="Enter full name"
-                            />
-                            {errors[`players_${activePlayerIndex}_fullName`] && (
-                              <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_fullName`]}</p>
-                            )}
-                          </div>
-
-                          <div className="space-y-1.5">
-                            <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Age *</label>
-                            <input
-                              type="number"
-                              value={players[activePlayerIndex].age}
-                              onChange={(e) => handlePlayerChange(activePlayerIndex, "age", e.target.value)}
-                              className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                              placeholder="Age"
-                            />
-                            {errors[`players_${activePlayerIndex}_age`] && (
-                              <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_age`]}</p>
-                            )}
-                          </div>
-
-                          <div className="space-y-1.5">
-                            <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Mobile Number *</label>
-                            <input
-                              type="tel"
-                              value={players[activePlayerIndex].mobileNumber}
-                              onChange={(e) => handlePlayerChange(activePlayerIndex, "mobileNumber", e.target.value)}
-                              className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                              placeholder="Mobile number"
-                            />
-                            {errors[`players_${activePlayerIndex}_mobileNumber`] && (
-                              <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_mobileNumber`]}</p>
-                            )}
-                          </div>
-
-                          <div className="space-y-1.5">
-                            <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Playing Role *</label>
-                            <select
-                              value={players[activePlayerIndex].playingRole}
-                              onChange={(e) => handlePlayerChange(activePlayerIndex, "playingRole", e.target.value)}
-                              className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                            >
-                              <option value="Batsman">Batsman</option>
-                              <option value="Bowler">Bowler</option>
-                              <option value="All-Rounder">All-Rounder</option>
-                              <option value="Wicket-Keeper">Wicket-Keeper</option>
-                            </select>
-                          </div>
-
-                          <div className="space-y-1.5 sm:col-span-2">
-                            <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Email Address *</label>
-                            <input
-                              type="email"
-                              value={players[activePlayerIndex].mail}
-                              onChange={(e) => handlePlayerChange(activePlayerIndex, "mail", e.target.value)}
-                              className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary"
-                              placeholder="player@example.com"
-                            />
-                            {errors[`players_${activePlayerIndex}_mail`] && (
-                              <p className="text-xs text-red-500 font-sans font-semibold mt-1">{errors[`players_${activePlayerIndex}_mail`]}</p>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Prev / Next Toggles inside card */}
-                        <div className="flex justify-between items-center pt-3 border-t border-neutral-100 mt-4">
-                          <button
-                            type="button"
-                            disabled={activePlayerIndex === 0}
-                            onClick={() => setActivePlayerIndex(prev => prev - 1)}
-                            className="px-4 py-2.5 border border-neutral-300 text-neutral-600 rounded-sm text-xs font-bold uppercase hover:bg-neutral-50 disabled:opacity-40"
-                          >
-                            ← Prev Player
-                          </button>
-                          <button
-                            type="button"
-                            disabled={activePlayerIndex === 7}
-                            onClick={() => setActivePlayerIndex(prev => prev + 1)}
-                            className="px-4 py-2.5 border border-neutral-300 text-neutral-600 rounded-sm text-xs font-bold uppercase hover:bg-neutral-50 disabled:opacity-40"
-                          >
-                            Next Player →
-                          </button>
-                        </div>
+                      {/* Card internal togglers */}
+                      <div className="flex justify-between items-center pt-3 border-t border-neutral-200 mt-4">
+                        <button
+                          type="button"
+                          disabled={activePlayerIndex === 0}
+                          onClick={() => setActivePlayerIndex(prev => prev - 1)}
+                          className="px-4 py-2.5 border border-neutral-300 text-neutral-600 rounded-md text-xs font-bold uppercase bg-white hover:bg-neutral-50 disabled:opacity-45"
+                        >
+                          ← Prev Player
+                        </button>
+                        <button
+                          type="button"
+                          disabled={activePlayerIndex === 7}
+                          onClick={() => setActivePlayerIndex(prev => prev + 1)}
+                          className="px-4 py-2.5 border border-neutral-300 text-neutral-600 rounded-md text-xs font-bold uppercase bg-white hover:bg-neutral-50 disabled:opacity-45"
+                        >
+                          Next Player →
+                        </button>
                       </div>
                     </div>
+                  </div>
 
-                    {/* File Upload for Aadhaar */}
-                    <div className="space-y-3 pt-2">
-                      <h4 className="text-xs md:text-sm font-bold text-neutral-500 uppercase tracking-widest font-sans border-b border-neutral-200 pb-1">
+                  {/* Card 5: Aadhaar Verification Upload */}
+                  <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 space-y-4">
+                    <div className="border-b border-neutral-100 pb-2">
+                      <h4 className="text-sm font-bold text-neutral-800 uppercase tracking-wider font-sans">
                         📎 Section 4: Aadhaar Verification File
                       </h4>
+                    </div>
+
+                    <div className="space-y-3 font-sans text-xs md:text-sm">
+                      <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase block tracking-wide">
+                        Combined Aadhaar Card Document (Single PDF/ZIP/Image file) *
+                      </label>
                       
-                      <div className="space-y-2 font-sans text-xs md:text-sm">
-                        <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase block">Combined Aadhaar Card Document *</label>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                          <label className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3.5 border border-neutral-300 bg-background text-neutral-700 font-bold text-xs uppercase tracking-wider rounded-sm cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all shadow-sm">
-                            <Upload className="w-4 h-4 mr-2" /> Select Collective File (PDF/ZIP/Images)
-                            <input
-                              type="file"
-                              accept=".pdf,image/*,.zip"
-                              className="hidden"
-                              onChange={async (e) => {
-                                const fileList = e.target.files;
-                                if (fileList && fileList.length > 0) {
-                                  const file = fileList[0];
-                                  if (file.size > 8 * 1024 * 1024) {
-                                    alert("File size exceeds the 8MB limit. Please upload a smaller file.");
-                                    return;
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <label className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3.5 border border-neutral-300 bg-neutral-50 text-neutral-700 font-bold text-xs uppercase tracking-wider rounded-md cursor-pointer hover:bg-neutral-100 active:scale-95 transition-all shadow-sm">
+                          <Upload className="w-4 h-4 mr-2" /> Select Collective File
+                          <input
+                            type="file"
+                            accept=".pdf,image/*,.zip"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const fileList = e.target.files;
+                              if (fileList && fileList.length > 0) {
+                                const file = fileList[0];
+                                if (file.size > 8 * 1024 * 1024) {
+                                  alert("File size exceeds the 8MB limit. Please upload a smaller file.");
+                                  return;
+                                }
+                                
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                  const base64Data = reader.result as string;
+                                  setAadhaarFile({
+                                    name: file.name,
+                                    type: file.type,
+                                    size: file.size,
+                                    data: base64Data
+                                  });
+                                  if (errors.aadhaarFile) {
+                                    setErrors(prev => ({ ...prev, aadhaarFile: "" }));
                                   }
-                                  
-                                  const reader = new FileReader();
-                                  reader.onload = () => {
-                                    const base64Data = reader.result as string;
-                                    setAadhaarFile({
-                                      name: file.name,
-                                      type: file.type,
-                                      size: file.size,
-                                      data: base64Data
-                                    });
-                                    if (errors.aadhaarFile) {
-                                      setErrors(prev => ({ ...prev, aadhaarFile: "" }));
-                                    }
-                                  };
-                                  reader.onerror = () => {
-                                    alert("Failed to read file.");
-                                  };
+                                };
+                                reader.onerror = () => {
+                                  alert("Failed to read file.");
+                                };
                                   reader.readAsDataURL(file);
                                 }
                               }}
@@ -894,12 +907,12 @@ const CricketCarnival = () => {
                         </div>
 
                         {aadhaarFile ? (
-                          <p className="text-xs text-neutral-600 font-semibold flex items-center gap-1.5 bg-[#FFFDEB] p-3 border border-[#E9DF9E] rounded-sm">
+                          <p className="text-xs text-neutral-600 font-semibold flex items-center gap-1.5 bg-[#FFFDEB] p-3 border border-[#E9DF9E] rounded-md">
                             📎 Attached: <strong>{aadhaarFile.name}</strong> ({(aadhaarFile.size / (1024 * 1024)).toFixed(2)} MB)
                           </p>
                         ) : (
                           <p className="text-[11px] md:text-xs text-neutral-400 leading-normal">
-                            No file selected. Please combine scans/photos of Aadhaar cards for all 8 team players into a single PDF, ZIP, or Image file. Max size 8MB.
+                            Please combine scans/photos of Aadhaar cards for all 8 team players into a single PDF, ZIP, or Image file. Max size 8MB.
                           </p>
                         )}
                         
@@ -909,15 +922,19 @@ const CricketCarnival = () => {
                       </div>
                     </div>
 
-                    {/* Declaration */}
-                    <div className="space-y-4 pt-2">
-                      <h4 className="text-xs md:text-sm font-bold text-neutral-500 uppercase tracking-widest font-sans border-b border-neutral-200 pb-1">
-                        📝 Section 5: Declaration & Sign-off
-                      </h4>
+                    {/* Card 6: Declaration & Sign-off */}
+                    <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 space-y-6">
+                      <div className="border-b border-neutral-100 pb-2">
+                        <h4 className="text-sm font-bold text-neutral-800 uppercase tracking-wider font-sans">
+                          📝 Section 5: Declaration & Sign-off
+                        </h4>
+                      </div>
 
                       <div className="space-y-4 text-xs md:text-sm">
-                        <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase font-sans">Captain's Signature (Type Full Name to Sign) *</label>
+                        <div className="space-y-2">
+                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">
+                            Captain's Signature (Type Full Name to Sign) *
+                          </label>
                           <input
                             type="text"
                             value={captainSignature}
@@ -925,8 +942,8 @@ const CricketCarnival = () => {
                               setCaptainSignature(e.target.value);
                               if (errors.captainSignature) setErrors(prev => ({ ...prev, captainSignature: "" }));
                             }}
-                            className="flex h-12 w-full rounded-sm border border-neutral-300 bg-background px-3.5 py-2 text-base font-sans focus:outline-none focus:ring-1 focus:ring-primary text-primary font-handwriting text-2xl"
-                            placeholder="e.g. John Doe"
+                            className="flex h-12 w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2 text-base font-sans focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary font-semibold"
+                            placeholder="Type captain name"
                           />
                           {errors.captainSignature && (
                             <p className="text-xs text-red-500 font-sans font-semibold">{errors.captainSignature}</p>
@@ -942,9 +959,9 @@ const CricketCarnival = () => {
                                 setAgreement(e.target.checked);
                                 if (errors.agreement) setErrors(prev => ({ ...prev, agreement: "" }));
                               }}
-                              className="rounded-sm border-neutral-300 text-primary focus:ring-primary w-5 h-5 mt-0.5"
+                              className="rounded border-neutral-300 text-primary focus:ring-primary w-5 h-5 mt-0.5"
                             />
-                            <span className="leading-snug font-semibold text-xs md:text-sm">
+                            <span className="leading-snug font-semibold text-neutral-700 text-xs md:text-sm select-none">
                               I declare that all information, age metrics, and player details provided are 100% accurate. If any player is found ineligible, our team will accept immediate disqualification. *
                             </span>
                           </label>
@@ -955,12 +972,12 @@ const CricketCarnival = () => {
                       </div>
                     </div>
 
-                    {/* Form Actions */}
-                    <div className="pt-4 border-t border-neutral-200 flex justify-between items-center font-sans text-xs md:text-sm">
+                    {/* Card 7: Wizard Bottom Actions */}
+                    <div className="flex justify-between items-center py-2 text-xs md:text-sm">
                       <button
                         type="button"
                         onClick={() => setCurrentStep(1)}
-                        className="px-6 py-3 border border-neutral-300 text-neutral-600 font-bold uppercase tracking-wider hover:bg-neutral-50 active:scale-95 transition-all"
+                        className="px-6 py-3 border border-neutral-300 text-neutral-600 rounded-md font-bold uppercase tracking-wider bg-white hover:bg-neutral-50 active:scale-95 transition-all"
                       >
                         Back to Rules
                       </button>
@@ -968,7 +985,7 @@ const CricketCarnival = () => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="px-8 py-3.5 bg-primary text-background border border-primary font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all disabled:opacity-50 flex items-center gap-2 active:scale-95"
+                        className="px-8 py-3.5 bg-primary text-white border border-primary font-bold uppercase tracking-wider rounded-md hover:bg-primary/95 transition-all disabled:opacity-50 flex items-center gap-2 active:scale-95 shadow-sm"
                       >
                         {loading ? (
                           <>
@@ -983,32 +1000,29 @@ const CricketCarnival = () => {
                         )}
                       </button>
                     </div>
+
                   </form>
                 )}
 
-                {/* STEP 3: SUCCESS */}
+                {/* STEP 3: SUCCESS BLOCK */}
                 {success && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center py-10 text-center space-y-6 font-sans"
-                  >
-                    <div className="w-20 h-20 bg-green-50 rounded-full border border-green-200 flex items-center justify-center shadow-inner text-green-600">
+                  <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-6 md:p-10 space-y-6 text-center">
+                    <div className="w-20 h-20 bg-green-50 rounded-full border border-green-200 flex items-center justify-center shadow-inner text-green-600 mx-auto">
                       <Check className="w-10 h-10 animate-bounce" />
                     </div>
 
-                    <div className="space-y-2">
-                      <h3 className="text-3xl font-bold font-serif text-primary animate-pulse">Team Registered!</h3>
-                      <p className="font-handwriting text-2xl text-gold">Every Victory Has a Story</p>
+                    <div className="space-y-1">
+                      <h3 className="text-2xl md:text-3xl font-bold text-primary tracking-tight font-sans">Team Registered!</h3>
+                      <p className="text-gold text-sm md:text-base font-sans font-semibold">Every Victory Has a Story</p>
                     </div>
 
-                    <div className="max-w-md bg-white border border-neutral-200 p-5 rounded-sm shadow-sm text-xs md:text-sm text-neutral-600 leading-relaxed text-left space-y-4">
+                    <div className="max-w-md mx-auto text-xs md:text-sm text-neutral-600 leading-relaxed text-left space-y-4 pt-2">
                       <p className="font-bold text-primary text-sm md:text-base">Thank you, Captain {captainName}!</p>
                       <p>
                         Your team registration for the <strong>Navyug Cricket Carnival 2026</strong> has been recorded. A confirmation email listing the players roster has been sent to <strong>{captainEmail}</strong>.
                       </p>
                       
-                      <div className="bg-[#EBF7FF] border border-blue-200 p-3.5 rounded-sm">
+                      <div className="bg-[#EBF7FF] border border-blue-200 p-3.5 rounded-md">
                         <p className="font-bold text-blue-900 mb-1 text-xs uppercase tracking-wide">📢 Join WhatsApp Group for Matches & Schedules</p>
                         <p className="text-[11px] text-blue-800 mb-3">Please join the official WhatsApp group for all upcoming match announcements, schedules, and team guidelines:</p>
                         <a
@@ -1021,7 +1035,7 @@ const CricketCarnival = () => {
                         </a>
                       </div>
                       
-                      <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-sm text-[11px] md:text-xs text-amber-800 space-y-1">
+                      <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-md text-[11px] md:text-xs text-amber-800 space-y-1">
                         <span className="font-bold text-amber-950 block">⚠️ Registration Submitted for Review</span>
                         <p>
                           Please note: <strong>Registration does not guarantee your spot in the playing team.</strong> Slots are strictly limited on a first-come, first-served basis.
@@ -1032,25 +1046,39 @@ const CricketCarnival = () => {
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => {
-                        setRegisterModalOpen(false);
-                        resetForm();
-                      }}
-                      type="button"
-                      className="px-8 py-3 bg-primary text-background border border-primary text-xs md:text-sm font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm active:scale-95"
-                    >
-                      Back to Stadium
-                    </button>
-                  </motion.div>
+                    <div className="pt-4">
+                      <button
+                        onClick={() => {
+                          setRegisterModalOpen(false);
+                          resetForm();
+                        }}
+                        type="button"
+                        className="px-8 py-3 bg-primary text-white text-xs md:text-sm font-bold uppercase tracking-wider rounded-md hover:bg-primary/95 transition-all shadow-sm active:scale-95"
+                      >
+                        Back to Stadium
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
           </section>
         )}
       </div>
 
-      <Footer />
+      {!registerModalOpen ? (
+        <Footer />
+      ) : (
+        /* Google Forms style clean minimal forms footer */
+        <div className="py-10 text-center text-xs text-neutral-500 font-sans space-y-2 mt-auto">
+          <div className="text-base font-bold text-neutral-600 flex items-center justify-center gap-1.5">
+            <span className="text-[#0b2d55]">NavYug</span>
+            <span className="font-normal text-neutral-500 border-l border-neutral-300 pl-2">Forms</span>
+          </div>
+          <div className="text-[11px] text-neutral-400 max-w-md mx-auto px-4 leading-normal">
+            This form is secure and verified. All uploaded Aadhaar card data is encrypted and saved directly to our secure cloud storage.
+          </div>
+        </div>
+      )}
     </main>
   );
 };
