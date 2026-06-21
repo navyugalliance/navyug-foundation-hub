@@ -1,7 +1,7 @@
 [
   {
     "id": "navyug-cricket-carnival-2026",
-    "title": "Navyug Cricket Carnival 2026",
+    "title": "Navyug Carnival 2026",
     "date": "2026-07-10",
     "description": "The Navyug Cricket Carnival 2026 is a premium sports initiative celebrating local talent, teamwork, and the passion for cricket. Every match tells a story of perseverance, dedication, and sportsmanship. Join us for a thrilling tournament where local teams battle for glory, and where every run and wicket write a new chapter in leadership and collective effort.",
     "tagline": "Every Victory Has a Story",
@@ -85,6 +85,12 @@
         "required": true
       },
       {
+        "id": "aadhaarFile",
+        "label": "Aadhaar Cards (Single combined PDF/ZIP/Image file for all 8 team members)",
+        "type": "file",
+        "required": true
+      },
+      {
         "id": "section_declaration",
         "label": "📝 SECTION 4 — Declaration",
         "type": "section",
@@ -111,21 +117,20 @@
     ]
   },
   {
-    "id": "sapno-ki-udaan",
-    "title": "Sapno Ki Udaan",
-    "date": "2026-03-21",
-    "description": "Sapno Ki Udaan is an initiative dedicated to empowering young minds, encouraging dreams, and creating opportunities for growth.",
-    "tagline": "Featured Initiative",
-    "completed": true,
+    "id": "sankalp-hanuman-sangeet-mahotsav",
+    "title": "Sankalp: Hanuman Sangeet Mahotsav",
+    "date": "2026-06-14",
+    "description": "Hanuman Sangeet Mahotsav is a devotional musical celebration dedicated to Lord Hanuman, bringing together devotees through soulful bhajans, spiritual performances, and an atmosphere of faith, unity, and devotion. The event aims to strengthen cultural values and create a memorable spiritual experience for the community.",
+    "tagline": "हर संकट का अंत, बजरंग के संग",
     "organizer": "NavYug Alliance",
     "presentedBy": "NavYug Alliance",
+    "location": "Nandura, Maharashtra",
+    "theme": "Faith • Devotion • Music • Unity • Culture",
+    "objective": "To promote devotion, cultural heritage, and community bonding through an evening of bhajans, spiritual music, and collective celebration of Lord Hanuman's teachings and values.",
+    "featuredAttraction": "Bhajan Sandhya & Hanuman Sangeet Mahotsav",
+    "targetAudience": "Devotees of Lord Hanuman, families, youth, spiritual seekers, bhajan enthusiasts, and members of the local community.",
     "instagram": "@navyugalliance",
-    "buttons": [
-      {
-        "label": "Register Now",
-        "url": "https://docs.google.com/forms/d/e/1FAIpQLScKl0q8pHRpoar3xCaarcJIDaD_S5mizVlv_18jQXdoEpA2IQ/viewform"
-      }
-    ]
+    "currentStatus": "Preparations Underway 🚩 Coming Soon 🚩"
   },
   {
     "id": "jal-dhara",
@@ -146,19 +151,20 @@
     "currentStatus": "Preparations Underway 💧 Coming Soon 💧"
   },
   {
-    "id": "sankalp-hanuman-sangeet-mahotsav",
-    "title": "Sankalp: Hanuman Sangeet Mahotsav",
-    "date": "2026-06-14",
-    "description": "Hanuman Sangeet Mahotsav is a devotional musical celebration dedicated to Lord Hanuman, bringing together devotees through soulful bhajans, spiritual performances, and an atmosphere of faith, unity, and devotion. The event aims to strengthen cultural values and create a memorable spiritual experience for the community.",
-    "tagline": "हर संकट का अंत, बजरंग के संग",
+    "id": "sapno-ki-udaan",
+    "title": "Sapno Ki Udaan",
+    "date": "2026-03-21",
+    "description": "Sapno Ki Udaan is an initiative dedicated to empowering young minds, encouraging dreams, and creating opportunities for growth.",
+    "tagline": "Featured Initiative",
+    "completed": true,
     "organizer": "NavYug Alliance",
     "presentedBy": "NavYug Alliance",
-    "location": "Nandura, Maharashtra",
-    "theme": "Faith • Devotion • Music • Unity • Culture",
-    "objective": "To promote devotion, cultural heritage, and community bonding through an evening of bhajans, spiritual music, and collective celebration of Lord Hanuman's teachings and values.",
-    "featuredAttraction": "Bhajan Sandhya & Hanuman Sangeet Mahotsav",
-    "targetAudience": "Devotees of Lord Hanuman, families, youth, spiritual seekers, bhajan enthusiasts, and members of the local community.",
     "instagram": "@navyugalliance",
-    "currentStatus": "Preparations Underway 🚩 Coming Soon 🚩"
+    "buttons": [
+      {
+        "label": "Register Now",
+        "url": "https://docs.google.com/forms/d/e/1FAIpQLScKl0q8pHRpoar3xCaarcJIDaD_S5mizVlv_18jQXdoEpA2IQ/viewform"
+      }
+    ]
   }
 ]
