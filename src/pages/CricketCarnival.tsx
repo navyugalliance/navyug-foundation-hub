@@ -69,11 +69,13 @@ const CricketCarnival = () => {
   const [agreement, setAgreement] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Auto-open inline wizard if ?register=true is in URL query parameters
+  // Auto-open inline wizard if ?register=true is in URL query parameters, reset if not
   useEffect(() => {
     if (searchParams.get("register") === "true") {
       setRegisterModalOpen(true);
       setCurrentStep(1);
+    } else {
+      setRegisterModalOpen(false);
     }
   }, [searchParams]);
 
@@ -248,7 +250,7 @@ const CricketCarnival = () => {
         keywords="Navyug Cricket Carnival, Navyug Alliance, Nandura Cricket, Cricket Registration, Tournament Rules, Youth Sports Maharashtra"
       />
 
-      {/* Red margin binder line on left */}
+      {/* Red margin binder line on left (Responsive positioning) */}
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-[2px] bg-red-400/10 pointer-events-none z-10" />
 
       <div>
@@ -256,7 +258,8 @@ const CricketCarnival = () => {
         <section className="relative bg-primary text-primary-foreground py-16 pb-24 overflow-hidden torn-edge-bottom">
           <div className="absolute inset-0 grid-paper pointer-events-none opacity-5" />
           
-          <div className="container mx-auto px-6 lg:px-16 relative z-10">
+          {/* pl-12 clears the notebook margin line on mobile, md:pl-24 for desktop */}
+          <div className="container mx-auto pl-12 pr-6 md:pl-24 md:pr-16 relative z-10">
             <Link
               to="/events"
               className="group inline-flex items-center gap-2 text-primary-foreground/80 hover:text-gold transition-colors text-sm font-sans font-semibold mb-6"
@@ -292,7 +295,7 @@ const CricketCarnival = () => {
         {/* Conditional View: Details vs Registration Flow */}
         {!registerModalOpen ? (
           /* Main Landing Page Details View */
-          <section className="py-12 md:py-20 container mx-auto px-6 lg:px-16 relative z-20">
+          <section className="py-12 md:py-20 container mx-auto pl-12 pr-6 md:pl-24 md:pr-16 relative z-20">
             <div className="grid lg:grid-cols-12 gap-10 items-start max-w-6xl mx-auto">
               
               {/* Left Collage Details */}
@@ -463,7 +466,7 @@ const CricketCarnival = () => {
           </section>
         ) : (
           /* Inline Registration Wizard View - Full Width & Optimized for Mobile Form-Filling */
-          <section className="py-8 md:py-12 container mx-auto px-4 md:px-16 relative z-20 max-w-3xl">
+          <section className="py-8 md:py-12 container mx-auto pl-12 pr-6 md:pl-24 md:pr-16 relative z-20 max-w-3xl">
             <div className="relative bg-[#FFFDF6] border border-neutral-300/40 rounded-sm shadow-xl p-5 md:p-10 text-left overflow-hidden">
               {/* Notebook bind style lines */}
               <div className="absolute inset-0 lined-paper opacity-25 pointer-events-none" />
@@ -562,7 +565,7 @@ const CricketCarnival = () => {
                           onChange={(e) => setAgreedToRules(e.target.checked)}
                           className="rounded-sm border-neutral-300 text-primary focus:ring-primary w-5 h-5"
                         />
-                        <span className="font-semibold select-none">I have read, understood, and agree to follow all rules and guidelines.</span>
+                        <span className="font-semibold select-none text-xs md:text-sm leading-normal">I have read, understood, and agree to follow all rules and guidelines.</span>
                       </label>
                     </div>
 
@@ -695,19 +698,19 @@ const CricketCarnival = () => {
                       </div>
                     </div>
 
-                    {/* Players Roster Section (Tabbed Index for Mobile Layout optimization) */}
+                    {/* Players Roster Section (Horizontal Swiper tabs for Mobile compatibility) */}
                     <div className="space-y-4 pt-2">
                       <div className="border-b border-neutral-200 pb-2">
                         <h4 className="text-xs md:text-sm font-bold text-neutral-500 uppercase tracking-widest font-sans">
                           🏏 Section 3: Player Roster (7 Playing + 1 Substitute)
                         </h4>
                         <p className="text-[11px] md:text-xs text-neutral-400 font-sans mt-1 leading-normal">
-                          Select a player number below to enter their details. Player #8 is the Substitute.
+                          Select a player tab below to fill details. Player #8 is the Substitute.
                         </p>
                       </div>
 
-                      {/* Number tabs for players */}
-                      <div className="grid grid-cols-4 sm:flex sm:flex-wrap gap-2 py-2">
+                      {/* Horizontally scrollable row of large numbers */}
+                      <div className="flex overflow-x-auto gap-2 py-2 -mx-4 px-4 scrollbar-thin">
                         {players.map((p, idx) => {
                           const filled = isPlayerFilled(idx);
                           const active = activePlayerIndex === idx;
@@ -716,26 +719,26 @@ const CricketCarnival = () => {
                               key={idx}
                               type="button"
                               onClick={() => setActivePlayerIndex(idx)}
-                              className={`flex items-center justify-center gap-1 py-3 border rounded-sm text-xs font-bold font-sans transition-all active:scale-95 ${
+                              className={`flex items-center justify-center gap-1.5 px-4 py-3 border rounded-md text-sm font-sans font-bold flex-shrink-0 min-w-[80px] transition-all active:scale-95 ${
                                 active
-                                  ? "bg-primary text-background border-primary shadow-sm"
+                                  ? "bg-primary text-background border-primary shadow-md"
                                   : filled
                                     ? "bg-green-50 text-green-700 border-green-200"
                                     : "bg-background text-neutral-500 border-neutral-300 hover:bg-neutral-50"
                               }`}
                             >
-                              #{p.number}
-                              {filled && <span className="text-green-600 font-bold ml-0.5">✓</span>}
-                              {idx === 7 && <span className="text-[9px] opacity-75 font-normal ml-0.5">(Sub)</span>}
+                              Player #{p.number}
+                              {filled && <span className="text-green-600 font-bold">✓</span>}
+                              {idx === 7 && <span className="text-[9px] opacity-75 font-normal">(Sub)</span>}
                             </button>
                           );
                         })}
                       </div>
 
-                      {/* Form Details of Active Player */}
+                      {/* Card layout for active player entry */}
                       <div className="bg-[#FFFDF6] p-5 border border-neutral-200 rounded-sm space-y-4 shadow-sm relative">
                         <div className="flex justify-between items-center border-b border-neutral-100 pb-2 mb-1">
-                          <span className="text-xs font-bold text-primary font-sans uppercase tracking-wider">
+                          <span className="text-xs md:text-sm font-bold text-primary font-sans uppercase tracking-wider">
                             Details for Player #{players[activePlayerIndex].number} {activePlayerIndex === 7 && <span className="text-gold font-bold font-handwriting lowercase text-base ml-1">(Substitute)</span>}
                           </span>
                         </div>
@@ -812,7 +815,7 @@ const CricketCarnival = () => {
                           </div>
                         </div>
 
-                        {/* Prev / Next Roster Toggles */}
+                        {/* Prev / Next Toggles inside card */}
                         <div className="flex justify-between items-center pt-3 border-t border-neutral-100 mt-4">
                           <button
                             type="button"
@@ -843,7 +846,7 @@ const CricketCarnival = () => {
                       <div className="space-y-2 font-sans text-xs md:text-sm">
                         <label className="text-xs md:text-sm font-bold text-neutral-500 uppercase block">Combined Aadhaar Card Document *</label>
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                          <label className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3 border border-neutral-300 bg-background text-neutral-700 font-bold text-xs uppercase tracking-wider rounded-sm cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all shadow-sm">
+                          <label className="inline-flex items-center justify-center w-full sm:w-auto px-5 py-3.5 border border-neutral-300 bg-background text-neutral-700 font-bold text-xs uppercase tracking-wider rounded-sm cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all shadow-sm">
                             <Upload className="w-4 h-4 mr-2" /> Select Collective File (PDF/ZIP/Images)
                             <input
                               type="file"
