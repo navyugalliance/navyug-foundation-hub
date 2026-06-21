@@ -79,6 +79,13 @@ const CricketCarnival = () => {
     }
   }, [searchParams]);
 
+  // Scroll to top when entering registration or changing wizard steps
+  useEffect(() => {
+    if (registerModalOpen) {
+      window.scrollTo(0, 0);
+    }
+  }, [registerModalOpen, currentStep]);
+
   // Handle Player Field Change
   const handlePlayerChange = (idx: number, key: keyof PlayerRoster, val: string) => {
     setPlayers(prev => {
@@ -525,7 +532,7 @@ const CricketCarnival = () => {
                       <h3 className="text-base font-bold text-neutral-800 uppercase tracking-wide">Tournament Guidelines</h3>
                     </div>
 
-                    <div className="space-y-3 text-xs md:text-sm text-neutral-600 leading-relaxed max-h-96 overflow-y-auto pr-1">
+                    <div className="space-y-3 text-sm md:text-base text-neutral-600 leading-relaxed max-h-96 overflow-y-auto pr-1">
                       <ol className="list-decimal pl-4 space-y-3.5">
                         <li>
                           <strong>Limited Seats — First Come First Serve:</strong> Team entries are strictly limited. Registering does <strong>NOT</strong> guarantee playing slot allocation. The core committee will verify details and contact you via email.
@@ -553,13 +560,13 @@ const CricketCarnival = () => {
                   <div className="bg-amber-50 rounded-lg shadow-sm border border-amber-200 p-5 space-y-3 flex flex-col">
                     <div className="flex items-start gap-2.5">
                       <Info className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                      <div className="text-xs text-amber-800 leading-relaxed font-sans">
+                      <div className="text-sm text-amber-800 leading-relaxed font-sans">
                         <strong>Review Process:</strong> The committee will verify all players' names and details against Aadhaar records. We will contact you via your captain's email to notify slot allocation results.
                       </div>
                     </div>
                     <div className="flex items-start gap-2.5 border-t border-amber-200/50 pt-2">
                       <Info className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                      <div className="text-xs text-amber-800 leading-relaxed font-sans">
+                      <div className="text-sm text-amber-800 leading-relaxed font-sans">
                         <strong>Upload Check:</strong> Ensure the combined Aadhaar document has legible records for all 8 players before advancing.
                       </div>
                     </div>
@@ -605,7 +612,7 @@ const CricketCarnival = () => {
                       </h4>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Team Name *</label>
+                      <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Team Name *</label>
                       <input
                         type="text"
                         value={teamName}
@@ -631,7 +638,7 @@ const CricketCarnival = () => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-2">
-                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Captain's Full Name *</label>
+                        <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Captain's Full Name *</label>
                         <input
                           type="text"
                           value={captainName}
@@ -647,7 +654,7 @@ const CricketCarnival = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Age *</label>
+                        <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Age *</label>
                         <input
                           type="number"
                           value={captainAge}
@@ -663,7 +670,7 @@ const CricketCarnival = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">WhatsApp Number</label>
+                        <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">WhatsApp Number</label>
                         <input
                           type="tel"
                           value={captainWhatsApp}
@@ -674,7 +681,7 @@ const CricketCarnival = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">Email Address *</label>
+                        <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Email Address *</label>
                         <input
                           type="email"
                           value={captainEmail}
@@ -691,7 +698,7 @@ const CricketCarnival = () => {
                       </div>
 
                       <div className="space-y-2 md:col-span-2">
-                        <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">City / Hometown *</label>
+                        <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">City / Hometown *</label>
                         <input
                           type="text"
                           value={captainCity}
@@ -715,7 +722,7 @@ const CricketCarnival = () => {
                       <h4 className="text-sm font-bold text-neutral-800 uppercase tracking-wider font-sans">
                         🏏 Section 3: Player Roster (7 Playing + 1 Substitute)
                       </h4>
-                      <p className="text-xs text-neutral-400 font-sans mt-1 leading-normal">
+                      <p className="text-xs md:text-sm text-neutral-500 font-sans mt-1 leading-normal">
                         Select a tab below to enter details. Player #8 is the Substitute.
                       </p>
                     </div>
@@ -749,14 +756,14 @@ const CricketCarnival = () => {
                     {/* Sub-card active player inputs */}
                     <div className="bg-neutral-50/50 p-5 border border-neutral-200 rounded-md space-y-4">
                       <div className="flex justify-between items-center border-b border-neutral-200 pb-2">
-                        <span className="text-xs md:text-sm font-bold text-primary font-sans uppercase tracking-wider">
+                        <span className="text-sm font-bold text-primary font-sans uppercase tracking-wider">
                           Details for Player #{players[activePlayerIndex].number} {activePlayerIndex === 7 && <span className="text-gold font-bold ml-1 font-sans text-xs">(Substitute)</span>}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-primary">
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Full Name *</label>
+                          <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Full Name *</label>
                           <input
                             type="text"
                             value={players[activePlayerIndex].fullName}
@@ -769,7 +776,7 @@ const CricketCarnival = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Age *</label>
+                          <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Age *</label>
                           <input
                             type="number"
                             value={players[activePlayerIndex].age}
@@ -782,7 +789,7 @@ const CricketCarnival = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Mobile Number *</label>
+                          <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Mobile Number *</label>
                           <input
                             type="tel"
                             value={players[activePlayerIndex].mobileNumber}
@@ -795,7 +802,7 @@ const CricketCarnival = () => {
                         </div>
 
                         <div className="space-y-1.5">
-                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Playing Role *</label>
+                          <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Playing Role *</label>
                           <select
                             value={players[activePlayerIndex].playingRole}
                             onChange={(e) => handlePlayerChange(activePlayerIndex, "playingRole", e.target.value)}
@@ -809,7 +816,7 @@ const CricketCarnival = () => {
                         </div>
 
                         <div className="space-y-1.5 sm:col-span-2">
-                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide">Email Address *</label>
+                          <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">Email Address *</label>
                           <input
                             type="email"
                             value={players[activePlayerIndex].mail}
@@ -853,8 +860,8 @@ const CricketCarnival = () => {
                       </h4>
                     </div>
 
-                    <div className="space-y-3 font-sans text-xs md:text-sm">
-                      <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase block tracking-wide">
+                    <div className="space-y-3 font-sans text-sm">
+                      <label className="text-sm font-semibold text-neutral-700 uppercase block tracking-wide">
                         Combined Aadhaar Card Document (Single PDF/ZIP/Image file) *
                       </label>
                       
@@ -907,11 +914,11 @@ const CricketCarnival = () => {
                         </div>
 
                         {aadhaarFile ? (
-                          <p className="text-xs text-neutral-600 font-semibold flex items-center gap-1.5 bg-[#FFFDEB] p-3 border border-[#E9DF9E] rounded-md">
+                          <p className="text-sm text-neutral-600 font-semibold flex items-center gap-1.5 bg-[#FFFDEB] p-3 border border-[#E9DF9E] rounded-md">
                             📎 Attached: <strong>{aadhaarFile.name}</strong> ({(aadhaarFile.size / (1024 * 1024)).toFixed(2)} MB)
                           </p>
                         ) : (
-                          <p className="text-[11px] md:text-xs text-neutral-400 leading-normal">
+                          <p className="text-xs md:text-sm text-neutral-500 leading-normal">
                             Please combine scans/photos of Aadhaar cards for all 8 team players into a single PDF, ZIP, or Image file. Max size 8MB.
                           </p>
                         )}
@@ -930,9 +937,9 @@ const CricketCarnival = () => {
                         </h4>
                       </div>
 
-                      <div className="space-y-4 text-xs md:text-sm">
+                      <div className="space-y-4 text-sm">
                         <div className="space-y-2">
-                          <label className="text-xs md:text-sm font-bold text-neutral-600 uppercase font-sans tracking-wide block">
+                          <label className="text-sm font-semibold text-neutral-700 uppercase font-sans tracking-wide block">
                             Captain's Signature (Type Full Name to Sign) *
                           </label>
                           <input
@@ -961,7 +968,7 @@ const CricketCarnival = () => {
                               }}
                               className="rounded border-neutral-300 text-primary focus:ring-primary w-5 h-5 mt-0.5"
                             />
-                            <span className="leading-snug font-semibold text-neutral-700 text-xs md:text-sm select-none">
+                            <span className="leading-snug font-semibold text-neutral-700 text-sm select-none">
                               I declare that all information, age metrics, and player details provided are 100% accurate. If any player is found ineligible, our team will accept immediate disqualification. *
                             </span>
                           </label>
@@ -1016,15 +1023,15 @@ const CricketCarnival = () => {
                       <p className="text-gold text-sm md:text-base font-sans font-semibold">Every Victory Has a Story</p>
                     </div>
 
-                    <div className="max-w-md mx-auto text-xs md:text-sm text-neutral-600 leading-relaxed text-left space-y-4 pt-2">
-                      <p className="font-bold text-primary text-sm md:text-base">Thank you, Captain {captainName}!</p>
+                    <div className="max-w-md mx-auto text-sm md:text-base text-neutral-600 leading-relaxed text-left space-y-4 pt-2">
+                      <p className="font-bold text-primary text-base">Thank you, Captain {captainName}!</p>
                       <p>
                         Your team registration for the <strong>Navyug Cricket Carnival 2026</strong> has been recorded. A confirmation email listing the players roster has been sent to <strong>{captainEmail}</strong>.
                       </p>
                       
-                      <div className="bg-[#EBF7FF] border border-blue-200 p-3.5 rounded-md">
-                        <p className="font-bold text-blue-900 mb-1 text-xs uppercase tracking-wide">📢 Join WhatsApp Group for Matches & Schedules</p>
-                        <p className="text-[11px] text-blue-800 mb-3">Please join the official WhatsApp group for all upcoming match announcements, schedules, and team guidelines:</p>
+                      <div className="bg-[#EBF7FF] border border-blue-200 p-4 rounded-md">
+                        <p className="font-bold text-blue-900 mb-1.5 text-xs uppercase tracking-wide">📢 Join WhatsApp Group for Matches & Schedules</p>
+                        <p className="text-xs md:text-sm text-blue-800 mb-3">Please join the official WhatsApp group for all upcoming match announcements, schedules, and team guidelines:</p>
                         <a
                           href="https://chat.whatsapp.com/DkanlL2if1d0VEtZfhiMWm"
                           target="_blank"
@@ -1035,7 +1042,7 @@ const CricketCarnival = () => {
                         </a>
                       </div>
                       
-                      <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-md text-[11px] md:text-xs text-amber-800 space-y-1">
+                      <div className="bg-amber-50 border border-amber-200 p-4 rounded-md text-xs md:text-sm text-amber-800 space-y-1.5">
                         <span className="font-bold text-amber-950 block">⚠️ Registration Submitted for Review</span>
                         <p>
                           Please note: <strong>Registration does not guarantee your spot in the playing team.</strong> Slots are strictly limited on a first-come, first-served basis.

@@ -119,9 +119,83 @@ function doPost(e) {
     }
     
     let targetSheet = targetSpreadsheet.getSheets()[0];
-    const flatAnswers = flattenAnswers(answers);
-    const keys = Object.keys(flatAnswers);
-    const headers = ["Timestamp", ...keys];
+    const timestamp = Utilities.formatDate(new Date(), "GMT+5:30", "yyyy-MM-dd HH:mm:ss");
+    const isCricket = eventId === "navyug-cricket-carnival-2026";
+    let headers = [];
+    let rowValues = [];
+
+    if (isCricket) {
+      headers = [
+        "Timestamp",
+        "Team Name",
+        "Captain Name",
+        "Captain Age",
+        "Captain WhatsApp",
+        "Captain Email",
+        "Captain City",
+        "Aadhaar File Link",
+        "Captain Signature",
+        "Agreement Accepted",
+        "Registration Date"
+      ];
+
+      for (let i = 1; i <= 8; i++) {
+        headers.push("Player " + i + " Full Name");
+        headers.push("Player " + i + " Age");
+        headers.push("Player " + i + " Mobile Number");
+        headers.push("Player " + i + " Playing Role");
+        headers.push("Player " + i + " Email");
+        headers.push("Player " + i + " Mark as Substitute");
+      }
+
+      const getPlayerVal = function(idx, field) {
+        const pArr = answers.players || [];
+        const p = pArr[idx] || {};
+        if (field === "fullName") return p.fullName || "";
+        if (field === "age") return p.age || "";
+        if (field === "mobileNumber") return p.mobileNumber || "";
+        if (field === "playingRole") return p.playingRole || "";
+        if (field === "mail") return p.mail || "";
+        if (field === "isSubstitute") return p.isSubstitute || "";
+        return "";
+      };
+
+      rowValues = [
+        timestamp,
+        answers.teamName || "",
+        answers.captainName || "",
+        answers.captainAge !== undefined && answers.captainAge !== null ? String(answers.captainAge) : "",
+        answers.captainWhatsApp || "",
+        answers.captainEmail || "",
+        answers.captainCity || "",
+        answers.aadhaarFile || "",
+        answers.captainSignature || "",
+        answers.agreement || "",
+        answers.registrationDate || ""
+      ];
+
+      for (let i = 0; i < 8; i++) {
+        rowValues.push(getPlayerVal(i, "fullName"));
+        rowValues.push(getPlayerVal(i, "age"));
+        rowValues.push(getPlayerVal(i, "mobileNumber"));
+        rowValues.push(getPlayerVal(i, "playingRole"));
+        rowValues.push(getPlayerVal(i, "mail"));
+        rowValues.push(getPlayerVal(i, "isSubstitute"));
+      }
+    } else {
+      const flatAnswers = flattenAnswers(answers);
+      const keys = Object.keys(flatAnswers);
+      headers = ["Timestamp", ...keys];
+      rowValues = [timestamp];
+      keys.forEach(key => {
+        const val = flatAnswers[key];
+        if (Array.isArray(val)) {
+          rowValues.push(val.join(", "));
+        } else {
+          rowValues.push(val !== undefined && val !== null ? String(val) : "");
+        }
+      });
+    }
 
     if (isNewSpreadsheet) {
       // Setup headers
@@ -131,22 +205,11 @@ function doPost(e) {
       targetSheet.getRange(1, 1, 1, headers.length)
         .setFontWeight("bold")
         .setBackground("#0B2D55")
-        .setFontColor("#FFFDF6");
+        .setFontColor("#FFFDF6")
+        .setHorizontalAlignment("center");
     }
 
     // 2. Add registration row values
-    const timestamp = Utilities.formatDate(new Date(), "GMT+5:30", "yyyy-MM-dd HH:mm:ss");
-    const rowValues = [timestamp];
-    
-    keys.forEach(key => {
-      const val = flatAnswers[key];
-      if (Array.isArray(val)) {
-        rowValues.push(val.join(", "));
-      } else {
-        rowValues.push(val !== undefined && val !== null ? String(val) : "");
-      }
-    });
-
     targetSheet.appendRow(rowValues);
     targetSheet.autoResizeColumns(1, headers.length);
 

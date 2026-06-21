@@ -194,9 +194,84 @@ export default async function handler(
       console.warn("Could not search Google Drive. Attempting direct creation...", err);
     }
 
-    const flatAnswers = flattenAnswers(answers);
-    const headers = ["Timestamp", ...Object.keys(flatAnswers)];
+    const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+    const isCricket = eventId === "navyug-cricket-carnival-2026";
+    let headers: string[] = [];
+    let rowValues: string[] = [];
+
+    if (isCricket) {
+      headers = [
+        "Timestamp",
+        "Team Name",
+        "Captain Name",
+        "Captain Age",
+        "Captain WhatsApp",
+        "Captain Email",
+        "Captain City",
+        "Aadhaar File Link",
+        "Captain Signature",
+        "Agreement Accepted",
+        "Registration Date"
+      ];
+
+      for (let i = 1; i <= 8; i++) {
+        headers.push(`Player ${i} Full Name`);
+        headers.push(`Player ${i} Age`);
+        headers.push(`Player ${i} Mobile Number`);
+        headers.push(`Player ${i} Playing Role`);
+        headers.push(`Player ${i} Email`);
+        headers.push(`Player ${i} Mark as Substitute`);
+      }
+
+      const getPlayerVal = (idx: number, field: string) => {
+        const pArr = answers.players || [];
+        const p = pArr[idx] || {};
+        if (field === "fullName") return p.fullName || "";
+        if (field === "age") return p.age || "";
+        if (field === "mobileNumber") return p.mobileNumber || "";
+        if (field === "playingRole") return p.playingRole || "";
+        if (field === "mail") return p.mail || "";
+        if (field === "isSubstitute") return p.isSubstitute || "";
+        return "";
+      };
+
+      rowValues = [
+        timestamp,
+        answers.teamName || "",
+        answers.captainName || "",
+        answers.captainAge !== undefined && answers.captainAge !== null ? String(answers.captainAge) : "",
+        answers.captainWhatsApp || "",
+        answers.captainEmail || "",
+        answers.captainCity || "",
+        answers.aadhaarFile || "",
+        answers.captainSignature || "",
+        answers.agreement || "",
+        answers.registrationDate || ""
+      ];
+
+      for (let i = 0; i < 8; i++) {
+        rowValues.push(getPlayerVal(i, "fullName"));
+        rowValues.push(getPlayerVal(i, "age"));
+        rowValues.push(getPlayerVal(i, "mobileNumber"));
+        rowValues.push(getPlayerVal(i, "playingRole"));
+        rowValues.push(getPlayerVal(i, "mail"));
+        rowValues.push(getPlayerVal(i, "isSubstitute"));
+      }
+    } else {
+      const flatAnswers = flattenAnswers(answers);
+      headers = ["Timestamp", ...Object.keys(flatAnswers)];
+      rowValues = [
+        timestamp,
+        ...Object.keys(flatAnswers).map((k) => {
+          const val = flatAnswers[k];
+          if (Array.isArray(val)) return val.join(", ");
+          return val !== undefined && val !== null ? String(val) : "";
+        })
+      ];
+    }
+
     let isNewSpreadsheet = false;
+    let targetSheetId = 0;
 
     if (!spreadsheetId) {
       // Create new spreadsheet file
@@ -213,6 +288,17 @@ export default async function handler(
         throw new Error("Failed to create a new spreadsheet file.");
       }
       isNewSpreadsheet = true;
+      targetSheetId = createRes.data.sheets?.[0]?.properties?.sheetId ?? 0;
+    } else {
+      try {
+        const ssInfo = await sheets.spreadsheets.get({ spreadsheetId });
+        const firstSheet = ssInfo.data.sheets?.[0];
+        if (firstSheet && firstSheet.properties) {
+          targetSheetId = firstSheet.properties.sheetId ?? 0;
+        }
+      } catch (err) {
+        console.warn("Could not fetch existing spreadsheet details:", err);
+      }
     }
 
     // Default sheet name in a new spreadsheet is 'Sheet1'
@@ -229,7 +315,7 @@ export default async function handler(
         },
       });
 
-      // Format header row (bold, Navy color)
+      // Format header row (bold, white text, Navy #0B2D55 background)
       try {
         await sheets.spreadsheets.batchUpdate({
           spreadsheetId,
@@ -238,7 +324,7 @@ export default async function handler(
               {
                 repeatCell: {
                   range: {
-                    sheetId: 0,
+                    sheetId: targetSheetId,
                     startRowIndex: 0,
                     endRowIndex: 1,
                     startColumnIndex: 0,
@@ -249,11 +335,14 @@ export default async function handler(
                       textFormat: {
                         bold: true,
                         foregroundColor: { red: 1.0, green: 1.0, blue: 1.0 },
+                        fontSize: 11,
+                        fontFamily: "Arial",
                       },
                       backgroundColor: { red: 11 / 255, green: 45 / 255, blue: 85 / 255 }, // #0B2D55
+                      horizontalAlignment: "CENTER",
                     },
                   },
-                  fields: "userEnteredFormat(textFormat,backgroundColor)",
+                  fields: "userEnteredFormat(textFormat,backgroundColor,horizontalAlignment)",
                 },
               },
             ],
@@ -264,14 +353,6 @@ export default async function handler(
       }
     }
 
-    // Prepare row values
-    const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-    const rowValues = [timestamp, ...Object.keys(flatAnswers).map((k) => {
-      const val = flatAnswers[k];
-      if (Array.isArray(val)) return val.join(", ");
-      return val !== undefined && val !== null ? String(val) : "";
-    })];
-
     // Append response row
     await sheets.spreadsheets.values.append({
       spreadsheetId,
@@ -281,6 +362,29 @@ export default async function handler(
         values: [rowValues],
       },
     });
+
+    // Auto-resize columns to fit data beautifully
+    try {
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId,
+        requestBody: {
+          requests: [
+            {
+              autoResizeDimensions: {
+                dimensions: {
+                  sheetId: targetSheetId,
+                  dimension: "COLUMNS",
+                  startIndex: 0,
+                  endIndex: headers.length,
+                },
+              },
+            },
+          ],
+        },
+      });
+    } catch (resizeErr) {
+      console.warn("Could not auto-resize spreadsheet columns:", resizeErr);
+    }
 
     // 3. Send email to the registrant
     const emailAddress = answers.captainEmail || answers.email || answers.Email || answers.EmailAddress;
