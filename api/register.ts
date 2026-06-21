@@ -3,6 +3,8 @@ import { google } from "googleapis";
 import nodemailer from "nodemailer";
 import fs from "fs";
 import path from "path";
+import { Readable } from "stream";
+
 
 function flattenAnswers(answers: Record<string, any>): Record<string, any> {
   const flat: Record<string, any> = {};
@@ -94,6 +96,85 @@ export default async function handler(
 
     const drive = google.drive({ version: "v3", auth });
     const sheets = google.sheets({ version: "v4", auth });
+
+    // 1.5 Handle Aadhaar File Upload if present
+    if (answers.aadhaarFile && typeof answers.aadhaarFile === "object" && answers.aadhaarFile.data) {
+      try {
+        const fileObj = answers.aadhaarFile;
+        // The data is a base64 data URL: e.g. "data:application/pdf;base64,..."
+        const parts = fileObj.data.split(",");
+        const base64Data = parts[1] || parts[0];
+        const buffer = Buffer.from(base64Data, "base64");
+
+        // Find or create "navyug cricket carnival" folder
+        let folderId: string | null = null;
+        try {
+          const folderSearch = await drive.files.list({
+            q: "mimeType='application/vnd.google-apps.folder' and name='navyug cricket carnival' and trashed=false",
+            fields: "files(id, name)",
+            spaces: "drive",
+          });
+          if (folderSearch.data.files && folderSearch.data.files.length > 0) {
+            folderId = folderSearch.data.files[0].id || null;
+          }
+        } catch (searchErr) {
+          console.warn("Folder search failed, will attempt to create folder:", searchErr);
+        }
+
+        if (!folderId) {
+          const folderCreate = await drive.files.create({
+            requestBody: {
+              name: "navyug cricket carnival",
+              mimeType: "application/vnd.google-apps.folder",
+            },
+            fields: "id",
+          });
+          folderId = folderCreate.data.id || null;
+        }
+
+        // Determine file name and upload
+        const teamName = answers.teamName || "Unknown_Team";
+        const teamNameSanitized = teamName.replace(/[^a-zA-Z0-9_-]/g, "_");
+        const ext = path.extname(fileObj.name || "") || "";
+        const fileName = `${teamNameSanitized}_Aadhaar_Cards${ext}`;
+
+        const bufferStream = new Readable();
+        bufferStream.push(buffer);
+        bufferStream.push(null);
+
+        const driveFile = await drive.files.create({
+          requestBody: {
+            name: fileName,
+            parents: folderId ? [folderId] : [],
+          },
+          media: {
+            mimeType: fileObj.type,
+            body: bufferStream,
+          },
+          fields: "id, webViewLink",
+        });
+
+        const fileId = driveFile.data.id;
+        const webViewLink = driveFile.data.webViewLink;
+
+        if (fileId) {
+          // Set sharing permission to public read
+          await drive.permissions.create({
+            fileId: fileId,
+            requestBody: {
+              role: "reader",
+              type: "anyone",
+            },
+          });
+        }
+
+        // Overwrite the file object with the public webViewLink
+        answers.aadhaarFile = webViewLink || "";
+      } catch (uploadErr: any) {
+        console.error("Google Drive Upload Error:", uploadErr);
+        throw new Error(`Failed to upload Aadhaar cards file to Google Drive: ${uploadErr.message}`);
+      }
+    }
 
     // 2. Find or Create Spreadsheet for this specific event
     const fileName = `Registrations - ${eventTitle}`;
@@ -354,7 +435,7 @@ export default async function handler(
                     <td style="padding: 40px 30px 20px 30px;">
                       <h1 style="font-family: Georgia, serif; color: #0B2D55; font-size: 24px; margin-top: 0; margin-bottom: 10px; text-align: center;">Registration Received!</h1>
                       <p style="color: #555555; font-size: 15px; line-height: 1.6; text-align: center; margin-bottom: 15px;">
-                        Congratulations <strong>${fullName}</strong>, your team registration for the <strong>${eventTitle}</strong> (scheduled for <strong>10th of July, 2026</strong>) has been successfully received.
+                        Congratulations <strong>${fullName}</strong>, your team registration request for the <strong>${eventTitle}</strong> (scheduled for <strong>11th and 12th of July, 2026</strong>) has been successfully received.
                       </p>
                       
                       <!-- Decorative line -->
@@ -368,9 +449,9 @@ export default async function handler(
                   <tr>
                     <td style="padding: 0 30px 20px 30px;">
                       <div style="background-color: #FFFDEB; border: 1px solid #D4C3A3; border-radius: 4px; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
-                        <h4 style="color: #0B2D55; font-family: Georgia, serif; font-size: 15px; margin-top: 0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">⚠️ Registration Status: Pending Payment</h4>
+                        <h4 style="color: #0B2D55; font-family: Georgia, serif; font-size: 15px; margin-top: 0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">⚠️ Registration Status: Under Review</h4>
                         <p style="color: #4A4A4A; font-size: 14px; line-height: 1.5; margin: 0 0 15px 0;">
-                          Please note that your registration will be officially confirmed <strong>only after the payment is verified</strong>. Our core team will contact you shortly to guide you through the payment process.
+                          Please note: <strong>Registration does not guarantee your spot in the playing team.</strong> Slots are strictly limited and allocated on a first-come, first-served basis. The core committee will verify your details and contact you via email shortly. If approved, you will receive payment processing instructions to finalize and secure your team slot.
                         </p>
                         <div style="margin-top: 15px; border-top: 1px dashed #D4C3A3; padding-top: 15px;">
                           <p style="color: #0B2D55; font-size: 13px; font-weight: bold; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;">📢 Join the Official WhatsApp Group</p>

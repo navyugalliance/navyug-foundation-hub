@@ -625,6 +625,7 @@ const EventEditor = ({ event, onChange, onDelete }: EditorProps) => {
                           <option value="checkbox">Single Agreement Checkbox</option>
                           <option value="date">Date Picker</option>
                           <option value="time">Time Picker</option>
+                          <option value="file">File Upload</option>
                         </select>
 
                         <div className="flex items-center gap-1.5 px-1">

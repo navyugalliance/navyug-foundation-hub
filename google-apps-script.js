@@ -52,6 +52,45 @@ function doPost(e) {
     const eventTitle = data.eventTitle;
     const answers = data.answers;
 
+    // 0.5 Handle Aadhaar File Upload in Google Apps Script if present
+    if (answers.aadhaarFile && typeof answers.aadhaarFile === "object" && answers.aadhaarFile.data) {
+      try {
+        const fileObj = answers.aadhaarFile;
+        let folder;
+        const folders = DriveApp.getFoldersByName("navyug cricket carnival");
+        if (folders.hasNext()) {
+          folder = folders.next();
+        } else {
+          folder = DriveApp.createFolder("navyug cricket carnival");
+        }
+
+        // Decode base64 data
+        const parts = fileObj.data.split(",");
+        const base64Data = parts[1] || parts[0];
+        const bytes = Utilities.base64Decode(base64Data);
+        const blob = Utilities.newBlob(bytes, fileObj.type, fileObj.name);
+
+        // Sanitize team name
+        const teamName = answers.teamName || "Unknown_Team";
+        const teamNameSanitized = teamName.replace(/[^a-zA-Z0-9_-]/g, "_");
+        const dotIdx = fileObj.name.lastIndexOf(".");
+        const ext = dotIdx !== -1 ? fileObj.name.substring(dotIdx) : "";
+        const fileName = teamNameSanitized + "_Aadhaar_Cards" + ext;
+        blob.setName(fileName);
+
+        // Save file to folder
+        const file = folder.createFile(blob);
+        // Set permissions: Anyone with the link can view
+        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+        // Store the sharing link
+        answers.aadhaarFile = file.getUrl();
+      } catch (uploadErr) {
+        console.error("Drive upload failed in Apps Script:", uploadErr);
+        throw new Error("Failed to upload Aadhaar cards to Google Drive: " + uploadErr.toString());
+      }
+    }
+
     if (!eventId || !eventTitle || !answers) {
       return ContentService.createTextOutput(JSON.stringify({
         success: false,
@@ -199,7 +238,7 @@ function doPost(e) {
                     <td style="padding: 40px 30px 20px 30px;">
                       <h1 style="font-family: Georgia, serif; color: #0B2D55; font-size: 24px; margin-top: 0; margin-bottom: 10px; text-align: center;">Registration Received!</h1>
                       <p style="color: #555555; font-size: 15px; line-height: 1.6; text-align: center; margin-bottom: 15px;">
-                        Congratulations <strong>${fullName}</strong>, your team registration for the <strong>${eventTitle}</strong> (scheduled for <strong>10th of July, 2026</strong>) has been successfully received.
+                        Congratulations <strong>${fullName}</strong>, your team registration request for the <strong>${eventTitle}</strong> (scheduled for <strong>11th and 12th of July, 2026</strong>) has been successfully received.
                       </p>
                       
                       <!-- Decorative line -->
@@ -213,9 +252,9 @@ function doPost(e) {
                   <tr>
                     <td style="padding: 0 30px 20px 30px;">
                       <div style="background-color: #FFFDEB; border: 1px solid #D4C3A3; border-radius: 4px; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
-                        <h4 style="color: #0B2D55; font-family: Georgia, serif; font-size: 15px; margin-top: 0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">⚠️ Registration Status: Pending Payment</h4>
+                        <h4 style="color: #0B2D55; font-family: Georgia, serif; font-size: 15px; margin-top: 0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">⚠️ Registration Status: Under Review</h4>
                         <p style="color: #4A4A4A; font-size: 14px; line-height: 1.5; margin: 0 0 15px 0;">
-                          Please note that your registration will be officially confirmed <strong>only after the payment is verified</strong>. Our core team will contact you shortly to guide you through the payment process.
+                          Please note: <strong>Registration does not guarantee your spot in the playing team.</strong> Slots are strictly limited and allocated on a first-come, first-served basis. The core committee will verify your details and contact you via email shortly. If approved, you will receive payment processing instructions to finalize and secure your team slot.
                         </p>
                         <div style="margin-top: 15px; border-top: 1px dashed #D4C3A3; padding-top: 15px;">
                           <p style="color: #0B2D55; font-size: 13px; font-weight: bold; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;">📢 Join the Official WhatsApp Group</p>

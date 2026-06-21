@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Calendar, Check, X, ArrowRight } from "lucide-react";
 import { EventItem, FormField, isCompleted, formatEventDate } from "@/lib/events";
+import { Link } from "react-router-dom";
 import jaldharaImg from "@/assets/jaldhara.webp";
 import sankalpImg from "@/assets/sankalp.webp";
 import careerImg from "@/assets/career.webp";
@@ -449,6 +450,60 @@ const RegistrationForm = ({ event, onBack, onClose }: RegistrationFormProps) => 
                     {field.label} {field.required && <span className="text-red-500">*</span>}
                   </span>
                 </label>
+              ) : field.type === "file" ? (
+                <div className="space-y-2 font-sans">
+                  <div className="flex items-center gap-3">
+                    <label className="inline-flex items-center justify-center px-4 py-2 border border-neutral-300 bg-background text-neutral-700 font-bold text-xs uppercase tracking-wider rounded-sm cursor-pointer hover:bg-neutral-50 active:scale-95 transition-all shadow-sm">
+                      Select File (PDF, Images, ZIP)
+                      <input
+                        type="file"
+                        accept=".pdf,image/*,.zip"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const fileList = e.target.files;
+                          if (fileList && fileList.length > 0) {
+                            const file = fileList[0];
+                            if (file.size > 8 * 1024 * 1024) {
+                              alert("File size exceeds the 8MB limit. Please upload a smaller file.");
+                              return;
+                            }
+                            
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                              const base64Data = reader.result as string;
+                              handleInputChange(field.id, {
+                                name: file.name,
+                                type: file.type,
+                                size: file.size,
+                                data: base64Data
+                              });
+                            };
+                            reader.onerror = () => {
+                              alert("Failed to read file.");
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+                    {answers[field.id] && (
+                      <button
+                        type="button"
+                        onClick={() => handleInputChange(field.id, null)}
+                        className="text-xs text-red-500 hover:text-red-700 font-bold uppercase tracking-wider flex items-center gap-1"
+                      >
+                        <X className="w-3.5 h-3.5" /> Remove
+                      </button>
+                    )}
+                  </div>
+                  {answers[field.id] ? (
+                    <p className="text-xs text-neutral-600 font-semibold flex items-center gap-1.5 bg-[#FFFDEB] p-2 border border-[#E9DF9E] rounded-sm">
+                      📎 Selected: <strong>{answers[field.id].name}</strong> ({(answers[field.id].size / (1024 * 1024)).toFixed(2)} MB)
+                    </p>
+                  ) : (
+                    <p className="text-[10px] text-neutral-400">No file selected. Please combine Aadhaar cards of all members into a single PDF, ZIP, or Image file.</p>
+                  )}
+                </div>
               ) : (
                 <input
                   type={field.type}
@@ -609,15 +664,24 @@ const EventCard = ({ event, index = 0 }: Props) => {
             {/* View Story CTA button & Ink Stamp */}
             <div className="pt-2 flex justify-between items-center">
               <div className="flex gap-2 relative z-20">
-                <button
-                  onClick={() => {
-                    setDetailOpen(true);
-                    setRegisterMode(false);
-                  }}
-                  className="group relative inline-flex items-center gap-1.5 px-5 py-2 border border-primary/20 bg-background text-primary font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background active:scale-95"
-                >
-                  View Story <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                </button>
+                {event.id === "navyug-cricket-carnival-2026" ? (
+                  <Link
+                    to="/cricket-carnival"
+                    className="group relative inline-flex items-center gap-1.5 px-5 py-2 border border-primary/20 bg-background text-primary font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background active:scale-95 text-center"
+                  >
+                    View Story <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setDetailOpen(true);
+                      setRegisterMode(false);
+                    }}
+                    className="group relative inline-flex items-center gap-1.5 px-5 py-2 border border-primary/20 bg-background text-primary font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background active:scale-95"
+                  >
+                    View Story <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </button>
+                )}
 
                 {!completed && event.registrationType === "external" && event.externalFormUrl && (
                   <a
@@ -631,16 +695,25 @@ const EventCard = ({ event, index = 0 }: Props) => {
                 )}
 
                 {!completed && (event.registrationType === "internal" || (!event.registrationType && event.registrationEnabled && !event.externalFormUrl)) && event.formSubmitUrl && (
-                  <button
-                    onClick={() => {
-                      setDetailOpen(true);
-                      setRegisterMode(true);
-                    }}
-                    type="button"
-                    className="px-5 py-2 bg-primary text-background border border-primary text-xs font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm active:scale-95"
-                  >
-                    Register
-                  </button>
+                  event.id === "navyug-cricket-carnival-2026" ? (
+                    <Link
+                      to="/cricket-carnival?register=true"
+                      className="px-5 py-2 bg-primary text-background border border-primary text-xs font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm active:scale-95 text-center"
+                    >
+                      Register
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setDetailOpen(true);
+                        setRegisterMode(true);
+                      }}
+                      type="button"
+                      className="px-5 py-2 bg-primary text-background border border-primary text-xs font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm active:scale-95"
+                    >
+                      Register
+                    </button>
+                  )
                 )}
               </div>
 

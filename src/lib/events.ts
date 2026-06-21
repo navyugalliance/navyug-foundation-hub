@@ -16,7 +16,7 @@ export interface EventImage {
 export interface FormField {
   id: string;
   label: string;
-  type: "text" | "number" | "email" | "tel" | "select" | "textarea" | "checkbox" | "radio" | "checkboxes" | "date" | "time" | "section" | "playersGrid";
+  type: "text" | "number" | "email" | "tel" | "select" | "textarea" | "checkbox" | "radio" | "checkboxes" | "date" | "time" | "section" | "playersGrid" | "file";
   required: boolean;
   options?: string[]; // for select / checkbox / radio options
 }
