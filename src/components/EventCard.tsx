@@ -608,15 +608,41 @@ const EventCard = ({ event, index = 0 }: Props) => {
 
             {/* View Story CTA button & Ink Stamp */}
             <div className="pt-2 flex justify-between items-center">
-              <button
-                onClick={() => {
-                  setDetailOpen(true);
-                  setRegisterMode(false);
-                }}
-                className="group relative inline-flex items-center gap-1.5 px-5 py-2 border border-primary/20 bg-background text-primary font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background active:scale-95"
-              >
-                View Story <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-              </button>
+              <div className="flex gap-2 relative z-20">
+                <button
+                  onClick={() => {
+                    setDetailOpen(true);
+                    setRegisterMode(false);
+                  }}
+                  className="group relative inline-flex items-center gap-1.5 px-5 py-2 border border-primary/20 bg-background text-primary font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:border-primary hover:bg-primary hover:text-background active:scale-95"
+                >
+                  View Story <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                </button>
+
+                {!completed && event.registrationType === "external" && event.externalFormUrl && (
+                  <a
+                    href={event.externalFormUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-5 py-2 bg-primary text-background border border-primary text-xs font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm text-center active:scale-95"
+                  >
+                    Register
+                  </a>
+                )}
+
+                {!completed && (event.registrationType === "internal" || (!event.registrationType && event.registrationEnabled && !event.externalFormUrl)) && event.formSubmitUrl && (
+                  <button
+                    onClick={() => {
+                      setDetailOpen(true);
+                      setRegisterMode(true);
+                    }}
+                    type="button"
+                    className="px-5 py-2 bg-primary text-background border border-primary text-xs font-bold uppercase tracking-wider hover:bg-transparent hover:text-primary transition-all shadow-sm active:scale-95"
+                  >
+                    Register
+                  </button>
+                )}
+              </div>
 
               {/* 12. Hand-drawn ink status stamp on bottom-right margin */}
               <div className="font-handwriting text-xs text-[#0B2D55]/60 border border-dashed border-[#0B2D55]/30 rounded-full px-2.5 py-0.5 rotate-[12deg] select-none pointer-events-none mr-2">
