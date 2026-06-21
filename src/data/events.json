@@ -2,7 +2,7 @@
   {
     "id": "navyug-cricket-carnival-2026",
     "title": "Navyug Cricket Carnival 2026",
-    "date": "2026-07-11",
+    "date": "2026-07-10",
     "description": "The Navyug Cricket Carnival 2026 is a premium sports initiative celebrating local talent, teamwork, and the passion for cricket. Every match tells a story of perseverance, dedication, and sportsmanship. Join us for a thrilling tournament where local teams battle for glory, and where every run and wicket write a new chapter in leadership and collective effort.",
     "tagline": "Every Victory Has a Story",
     "organizer": "NavYug Alliance",
@@ -31,12 +31,6 @@
         "required": true
       },
       {
-        "id": "teamLogoColor",
-        "label": "Team Logo / Jersey Color",
-        "type": "text",
-        "required": true
-      },
-      {
         "id": "section_captain",
         "label": "👤 SECTION 2 — Captain Details",
         "type": "section",
@@ -56,7 +50,7 @@
       },
       {
         "id": "captainWhatsApp",
-        "label": "WhatsApp Number (if different)",
+        "label": "WhatsApp Number",
         "type": "tel",
         "required": false
       },
@@ -85,12 +79,6 @@
         "required": true
       },
       {
-        "id": "aadhaarFile",
-        "label": "Aadhaar Cards (Single combined PDF/ZIP/Image file for all 8 team members)",
-        "type": "file",
-        "required": true
-      },
-      {
         "id": "section_declaration",
         "label": "📝 SECTION 4 — Declaration",
         "type": "section",
@@ -113,6 +101,13 @@
         "label": "I confirm all players are eligible and agree to tournament rules",
         "type": "checkbox",
         "required": true
+      }
+    ],
+    "images": [
+      {
+        "src": "/uploads/upload_1782073930447_700.png",
+        "aspect": "1:1",
+        "alt": "Navyug Cricket Carnival 2026"
       }
     ]
   },
