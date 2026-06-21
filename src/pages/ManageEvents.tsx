@@ -84,18 +84,65 @@ const ManageEvents = () => {
     setDirty(true);
   };
 
-  const saveAll = () => {
+  const saveAll = async () => {
+    // 1. Save to browser local storage
     saveAllEvents(events);
-    setDirty(false);
-    toast({ title: "Changes Saved", description: "Scrapbook initiatives updated in storage." });
+    
+    // 2. Persist to events.json on disk (works locally in development)
+    try {
+      const response = await fetch("/api/save-events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ events }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setDirty(false);
+        toast({
+          title: "Changes Saved Successfully",
+          description: "Campaigns and uploads have been successfully written to events.json.",
+        });
+      } else {
+        toast({
+          title: "Save Failed",
+          description: data.message || "Failed to persist changes to disk.",
+          variant: "destructive",
+        });
+      }
+    } catch (err: any) {
+      console.error("Save error:", err);
+      // Fallback: still treat as saved locally in the browser
+      setDirty(false);
+      toast({
+        title: "Saved Locally",
+        description: "Saved to browser storage, but failed to sync to disk.",
+      });
+    }
   };
 
-  const handleReset = () => {
-    if (!confirm("Reset all events to original seed data? This wipes your local changes.")) return;
+  const handleReset = async () => {
+    if (!confirm("Reset all events to original seed data? This wipes all local changes on browser and disk.")) return;
     resetToSeed();
-    setEvents(getAllEvents());
+    const seedEvents = getAllEvents();
+    setEvents(seedEvents);
+    
+    // Sync seed reset back to disk
+    try {
+      await fetch("/api/save-events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ events: seedEvents }),
+      });
+    } catch (err) {
+      console.error("Reset sync error:", err);
+    }
+    
     setDirty(false);
-    toast({ title: "Database Reset", description: "Restored default events." });
+    toast({ title: "Database Reset", description: "Restored seed data on browser and disk." });
   };
 
   const exportJson = () => {

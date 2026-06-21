@@ -35,18 +35,19 @@ export default defineConfig(({ mode }) => ({
       name: "api-server",
       configureServer(server) {
         server.middlewares.use(async (req, res, next) => {
-          if (req.url === "/api/register" && req.method === "POST") {
-            try {
-              const module = await server.ssrLoadModule("./api/register.ts");
-              let body = "";
-              req.on("data", (chunk) => {
-                body += chunk;
-              });
-              req.on("end", async () => {
-                try {
+          if (req.url && req.url.startsWith("/api/")) {
+            const apiName = req.url.slice(5).split("?")[0];
+            const apiPath = `./api/${apiName}.ts`;
+            const absoluteApiPath = path.resolve(__dirname, apiPath);
+            if (fs.existsSync(absoluteApiPath)) {
+              try {
+                const module = await server.ssrLoadModule(apiPath);
+                
+                // For OPTIONS or GET requests, we can execute the handler immediately without reading body stream
+                if (req.method === "OPTIONS" || req.method === "GET" || req.method === "DELETE") {
                   const vercelReq = {
-                    method: "POST",
-                    body: JSON.parse(body),
+                    method: req.method,
+                    body: {},
                     headers: req.headers,
                   };
                   const vercelRes = {
@@ -69,18 +70,56 @@ export default defineConfig(({ mode }) => ({
                     },
                   };
                   await module.default(vercelReq, vercelRes);
-                } catch (err: any) {
-                  console.error("Vite API Request Processing Error:", err);
-                  res.statusCode = 500;
-                  res.setHeader("Content-Type", "application/json");
-                  res.end(JSON.stringify({ success: false, message: err.message }));
+                  return;
                 }
-              });
-            } catch (err: any) {
-              console.error("Vite API Server Loader Error:", err);
-              res.statusCode = 500;
-              res.setHeader("Content-Type", "application/json");
-              res.end(JSON.stringify({ success: false, message: err.message }));
+
+                let body = "";
+                req.on("data", (chunk) => {
+                  body += chunk;
+                });
+                req.on("end", async () => {
+                  try {
+                    const parsedBody = body ? JSON.parse(body) : {};
+                    const vercelReq = {
+                      method: req.method,
+                      body: parsedBody,
+                      headers: req.headers,
+                    };
+                    const vercelRes = {
+                      setHeader(name: string, value: string) {
+                        res.setHeader(name, value);
+                        return this;
+                      },
+                      status(code: number) {
+                        res.statusCode = code;
+                        return this;
+                      },
+                      json(data: any) {
+                        res.setHeader("Content-Type", "application/json");
+                        res.end(JSON.stringify(data));
+                        return this;
+                      },
+                      end(data?: any) {
+                        res.end(data);
+                        return this;
+                      },
+                    };
+                    await module.default(vercelReq, vercelRes);
+                  } catch (err: any) {
+                    console.error("Vite API Request Processing Error:", err);
+                    res.statusCode = 500;
+                    res.setHeader("Content-Type", "application/json");
+                    res.end(JSON.stringify({ success: false, message: err.message }));
+                  }
+                });
+              } catch (err: any) {
+                console.error("Vite API Server Loader Error:", err);
+                res.statusCode = 500;
+                res.setHeader("Content-Type", "application/json");
+                res.end(JSON.stringify({ success: false, message: err.message }));
+              }
+            } else {
+              next();
             }
           } else {
             next();
