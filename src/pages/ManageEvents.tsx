@@ -29,7 +29,7 @@ const emptyEvent = (): EventItem => ({
   buttons: [],
 });
 
-// Compress image file to base64 JPEG/PNG (max 1600px, quality 0.85)
+// Compress image file to base64 JPEG/PNG (max 1000px, quality 0.75)
 const fileToCompressedDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -38,7 +38,7 @@ const fileToCompressedDataUrl = (file: File): Promise<string> =>
       const img = new Image();
       img.onerror = reject;
       img.onload = () => {
-        const MAX = 1600;
+        const MAX = 1000;
         let { width, height } = img;
         if (width > MAX || height > MAX) {
           const scale = Math.min(MAX / width, MAX / height);
@@ -52,7 +52,7 @@ const fileToCompressedDataUrl = (file: File): Promise<string> =>
         if (!ctx) return reject(new Error("Canvas unsupported"));
         ctx.drawImage(img, 0, 0, width, height);
         const isPng = file.type === "image/png";
-        resolve(canvas.toDataURL(isPng ? "image/png" : "image/jpeg", 0.85));
+        resolve(canvas.toDataURL(isPng ? "image/png" : "image/jpeg", 0.75));
       };
       img.src = reader.result as string;
     };
@@ -117,7 +117,7 @@ const ManageEvents = () => {
       setDirty(false);
       toast({
         title: "Saved Locally",
-        description: "Saved to browser storage, but failed to sync to disk.",
+        description: `Saved to browser storage, but failed to sync to disk. (Error: ${err.message || err})`,
       });
     }
   };
